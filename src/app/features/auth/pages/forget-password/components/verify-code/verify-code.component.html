@@ -1,0 +1,47 @@
+<form [formGroup]="resetForm" (ngSubmit)="verifyCode()" class="lg:px-[134px] lg:py-[200px] p-10">
+  <span (click)="step.emit(1)" class="cursor-pointer block mb-10">
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0.75" y="0.75" width="38.5" height="38.5" stroke="#E5E7EB" stroke-width="1.5" />
+      <path
+        d="M14 16L10 20M10 20L14 24M10 20H30"
+        stroke="#1F2937"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </span>
+  <h2 class="font-sans font-bold text-[30px]">Verify OTP</h2>
+  <p class="pt-2 text-gray-600">Please enter the 6-digit code we have sent to:</p>
+  <p class="pb-10 text-lg text-start">
+    <span class="font-semibold text-gray-500">user@example.com</span>
+    <span
+      class="text-primary cursor-pointer ml-2 underline-offset-2 underline"
+      (click)="step.emit(1)"
+      >Edit</span
+    >
+  </p>
+
+  <div class="flex justify-center gap-3 mb-6">
+    @for (ctrl of codeControls; track ctrl) {
+    <app-input-field
+      class="w-12 text-center"
+      [controller]="ctrl"
+      [id]="ctrl.toString()"
+      type="text"
+      [otp]="true"
+      maxlength="1"
+    ></app-input-field>
+    }
+  </div>
+
+  <p class="text-gray-400 text-sm text-center mb-10">
+    You can request another code in: <span class="font-semibold text-gray-500">60s</span>
+  </p>
+  <app-button label="Verify Code"></app-button>
+
+  <p class="text-gray-400 text-center mt-6 font-medium">
+    Don’t have an account?
+    <span class="text-primary cursor-pointer" routerLink="/register">Create yours</span>
+  </p>
+</form>
