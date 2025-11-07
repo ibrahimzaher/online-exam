@@ -11,6 +11,7 @@ import { Router, RouterLink } from '@angular/router';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { InputFieldComponent } from '../../../../shared/ui/input-field/input-field.component';
+import { matchFieldsValidator } from '../../../../shared/utils/validators.utils';
 
 @Component({
   selector: 'app-register',
@@ -46,7 +47,7 @@ export class RegisterComponent implements OnInit {
         phone: [null, [Validators.required]],
       },
       {
-        validators: this.misMatch,
+        validators: matchFieldsValidator('password', 'rePassword'),
       }
     );
   }
@@ -72,23 +73,6 @@ export class RegisterComponent implements OnInit {
     return this.registerForm.get('phone') as FormControl;
   }
 
-  misMatch(control: AbstractControl) {
-    const password = control.get('password');
-    const rePassword = control.get('rePassword');
-
-    if (!password || !rePassword) return null;
-
-    if (password.value !== rePassword.value) {
-      rePassword.setErrors({ ...(rePassword.errors || {}), mismatch: true });
-      return { mismatch: true };
-    } else {
-      if (rePassword.hasError('mismatch')) {
-        const { mismatch, ...otherErrors } = rePassword.errors || {};
-        rePassword.setErrors(Object.keys(otherErrors).length ? otherErrors : null);
-      }
-      return null;
-    }
-  }
   register() {
     this.registerForm.valid
       ? console.log(this.registerForm.value)

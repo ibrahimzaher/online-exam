@@ -10,6 +10,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { InputFieldComponent } from '../../../../../../shared/ui/input-field/input-field.component';
 import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
+import { matchFieldsValidator } from '../../../../../../shared/utils/validators.utils';
 
 @Component({
   selector: 'app-reset-password',
@@ -31,27 +32,11 @@ export class ResetPasswordComponent implements OnInit {
         newPassword: [null, [Validators.required]],
       },
       {
-        validators: this.misMatch,
+        validators: matchFieldsValidator('password', 'newPassword'),
       }
     );
   }
-  misMatch(control: AbstractControl) {
-    const password = control.get('password');
-    const rePassword = control.get('newPassword');
 
-    if (!password || !rePassword) return null;
-
-    if (password.value !== rePassword.value) {
-      rePassword.setErrors({ ...(rePassword.errors || {}), mismatch: true });
-      return { mismatch: true };
-    } else {
-      if (rePassword.hasError('mismatch')) {
-        const { mismatch, ...otherErrors } = rePassword.errors || {};
-        rePassword.setErrors(Object.keys(otherErrors).length ? otherErrors : null);
-      }
-      return null;
-    }
-  }
   private readonly _fb = inject(FormBuilder);
   private readonly _router = inject(Router);
   resetForm!: FormGroup;

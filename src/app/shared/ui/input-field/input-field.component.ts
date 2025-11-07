@@ -5,6 +5,7 @@ import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
+import { getErrorMessage } from '../../utils/form-error.utils';
 
 @Component({
   selector: 'app-input-field',
@@ -38,31 +39,12 @@ export class InputFieldComponent {
     const errors = this.controller().errors;
     if (!errors) return [];
 
-    return Object.keys(errors).map((key) => this.getErrorMessage(key, errors[key]));
-  }
-
-  private getErrorMessage(key: string, value: any): string {
-    switch (key) {
-      case 'required':
-        return this.otp() ? '' : `${this.label() ?? 'Field'} is required`;
-      case 'minlength':
-        return `Minimum length is ${value.requiredLength} characters`;
-      case 'maxlength':
-        return `Maximum length is ${value.requiredLength} characters`;
-      case 'mismatch':
-        return 'Password is not macth';
-      case 'pattern':
-        return this.type() === 'password'
-          ? 'Password must contain uppercase, lowercase, number, and special character'
-          : this.otp()
-          ? 'Inv'
-          : `Invalid ${this.label() ?? 'value'}`;
-      case 'email':
-        return 'Invalid email format';
-      case 'validatePhoneNumber':
-        return 'Invalid phone number';
-      default:
-        return 'Invalid field';
-    }
+    return Object.keys(errors).map((key) =>
+      getErrorMessage(key, errors[key], {
+        label: this.label(),
+        otp: this.otp(),
+        type: this.type(),
+      })
+    );
   }
 }
