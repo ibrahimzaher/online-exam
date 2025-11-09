@@ -39,12 +39,11 @@
     [ngClass]="{ 'border-danger': hasError }"
   />
   } @if (hasError) {
-  <div class="mt-1 flex flex-col gap-1">
-    @for (msg of errorMessages; track $index) {
-    <p-message severity="error" variant="simple" size="small">
-      {{ msg }}
-    </p-message>
-    }
-  </div>
+  <app-form-error
+    [controller]="control"
+    [label]="label()"
+    [otp]="otp()"
+    [type]="type()"
+  ></app-form-error>
   }
 </div>
