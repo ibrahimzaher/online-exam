@@ -1,0 +1,49 @@
+<div class="flex flex-col gap-2 w-full">
+  @if (label()) {
+  <label [for]="id()" class="text-[16px] font-medium text-base">{{ label() }}</label>
+  } @if (type() === 'password') {
+  <p-password
+    [formControl]="control"
+    [placeholder]="placeholder()"
+    [inputId]="id()"
+    [feedback]="feedback()"
+    [toggleMask]="toggleMask()"
+    [inputStyleClass]="
+      hasError
+        ? 'w-full placeholder:text-gray-400  rounded-none border-danger px-3 py-2'
+        : 'w-full placeholder:text-gray-400  rounded-none border px-3 py-2'
+    "
+    [ngClass]="{ 'border-danger': hasError }"
+  ></p-password>
+  }@else if(type()=='tel'){
+
+  <ngx-intl-tel-input
+    [preferredCountries]="['eg', 'sa', 'us']"
+    [enableAutoCountrySelect]="false"
+    [enablePlaceholder]="true"
+    [searchCountryFlag]="true"
+    [selectFirstCountry]="true"
+    [phoneValidation]="true"
+    [separateDialCode]="true"
+    name="phone"
+    [formControl]="control"
+  ></ngx-intl-tel-input>
+  } @else {
+  <input
+    pInputText
+    [id]="id()"
+    [type]="type()"
+    [formControl]="control"
+    [placeholder]="placeholder()"
+    class="w-full placeholder:text-gray-400 rounded-none border px-3 py-2"
+    [ngClass]="{ 'border-danger': hasError }"
+  />
+  } @if (hasError) {
+  <app-form-error
+    [controller]="control"
+    [label]="label()"
+    [otp]="otp()"
+    [type]="type()"
+  ></app-form-error>
+  }
+</div>

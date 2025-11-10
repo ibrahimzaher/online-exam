@@ -1,0 +1,23 @@
+<form [formGroup]="forgetForm" (ngSubmit)="continue()" class="lg:px-[134px] lg:py-[309px] p-10">
+  <h2 class="font-sans font-bold text-[30px]">Forgot Password</h2>
+  <p class="pb-10 pt-2.5">
+    Don’t worry, we will help you recover <br />
+    your account.
+  </p>
+  <div class="flex flex-col gap-4">
+    <app-input-field
+      [controller]="email"
+      [id]="'email'"
+      [label]="'Email'"
+      placeholder="user@example.com"
+      type="email"
+      class="mb-5"
+    ></app-input-field>
+    <app-button label="Continue" icon="pi pi-arrow-right"></app-button>
+
+    <span class="text-gray-400 text-center mt-5 font-medium"
+      >Don’t have an account?
+      <span class="text-primary cursor-pointer" routerLink="/register">Create yours</span></span
+    >
+  </div>
+</form>
