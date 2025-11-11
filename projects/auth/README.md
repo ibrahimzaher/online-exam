@@ -1,63 +1,153 @@
-# Auth
+# Auth Library
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.0.
+A **clean-architecture-based authentication library** for Angular applications.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Installation
 
 ```bash
-ng generate --help
+npm install @izaher-dev/auth
 ```
 
-## Building
+## Setup
 
-To build the library, run:
+### Dependency Injection
 
-```bash
-ng build auth
+To configure and inject the library in your Angular project, you can use one of the following methods:
+
+#### 1. Using `bootstrapApplication` (Standalone Components)
+
+```ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { App } from './app.component';
+import { AUTH_PROVIDERS, API_CONFIG } from '@izaher-dev/auth';
+
+bootstrapApplication(App, {
+  providers: [
+    ...AUTH_PROVIDERS,
+    { provide: API_CONFIG, useValue: { baseUrl: 'https://api.example.com/' } },
+  ],
+});
 ```
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
+#### 1. 2. Using `NgModule` (Traditional Module-based App)
 
-### Publishing the Library
+```ts
+import { NgModule } from '@angular/core';
+import { AUTH_PROVIDERS, API_CONFIG } from '@izaher-dev/auth';
 
-Once the project is built, you can publish your library by following these steps:
-
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/auth
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
+@NgModule({
+  providers: [
+    ...AUTH_PROVIDERS,
+    { provide: API_CONFIG, useValue: { baseUrl: 'https://api.example.com/' } },
+  ],
+})
+export class AppModule {}
 ```
 
-## Running end-to-end tests
+## Usage
 
-For end-to-end (e2e) testing, run:
+### Using the Facade (Recommended)
 
-```bash
-ng e2e
+```ts
+import { Component } from '@angular/core';
+import { AuthFacade } from '@izaher-dev/auth';
+
+@Component({
+  selector: 'app-my-component',
+  templateUrl: './my-component.html',
+})
+export class MyComponent {
+  constructor(private auth: AuthFacade) {}
+
+  login() {
+    this.auth.login({ email: 'user@example.com', password: 'password' }).subscribe({
+      next: (user) => console.log(user),
+      error: (err) => console.error(err),
+    });
+  }
+}
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Using Individual UseCases
 
-## Additional Resources
+```ts
+import { LoginUsecaseService, RegisterUsecaseService } from '@izaher-dev/auth';
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+constructor(private loginUsecase: LoginUsecaseService) {}
+
+this.loginUsecase.execute({ email, password }).subscribe(...);
+
+```
+
+## Layers
+
+### Domain
+
+- **User entity**
+- **AuthRepo interface**
+- **UseCases:**
+  - LoginUsecaseService
+  - RegisterUsecaseService
+  - ChangePasswordUsecaseService
+  - LogoutUsecaseService
+  - DeleteMeUsecaseService
+  - EditProfileUsecaseService
+  - ForgetPasswordUsecaseService
+  - ResetPasswordUsecaseService
+  - VerifyResetCodeUsecaseService
+  - ProfileDataUsecaseService
+
+### Data
+
+- **DTOs:** `auth-req.dto.ts`, `auth-res.dto.ts`
+- **API Service:** `AuthApiService`
+- **Repository Implementation:** `AuthApiRepo`
+- **Adaptors:** `AuthApiAdaptor`
+- **Endpoints:** `AuthApiEndPoint`
+
+### Application
+
+- **AuthFacade** to simplify usage
+
+---
+
+## DTOs
+
+### Request DTOs
+
+- LoginRequestDTO
+- RegisterRequestDTO
+- ChangePasswordReqDTO
+- EditProfileReqDTO
+- ForgetPasswordReqDTO
+- ResetPasswordReqDTO
+- VerifyResetCodeReqDTO
+
+### Response DTOs
+
+- LoginResponseDTO
+- RegisterResponseDTO
+- ChangePasswordResDTO
+- DeleteMeResDTO
+- LogOutResDTO
+- ProfileDataResDTO
+- EditProfileResDTO
+- ForgetPasswordResDTO
+- ResetPasswordResDTO
+- VerifyResetCodeResDTO
+
+---
+
+## Notes
+
+- Use Angular Dependency Injection for repository and API config.
+- Errors are propagated via Observable errors; optionally handle them with interceptors.
+- Endpoints are centralized in `AuthApiEndPoint`.
+
+---
+
+## License
+
+MIT
