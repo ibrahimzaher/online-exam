@@ -3,6 +3,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { ReactiveFormsModule } from '@angular/forms';
 import { ForgetComponent } from './components/forget/forget.component';
 import { VerifyCodeComponent } from './components/verify-code/verify-code.component';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-forget-password',
@@ -12,8 +13,12 @@ import { VerifyCodeComponent } from './components/verify-code/verify-code.compon
 })
 export class ForgetPasswordComponent implements OnInit {
   steps = signal<number>(1);
+  email = signal<string>('');
   ngOnInit(): void {}
   onStepChange(newStep: number) {
     this.steps.set(newStep);
+  }
+  onEmailChange(email: string) {
+    this.email.set(email);
   }
 }
