@@ -1,6 +1,6 @@
 {
   "name": "@izaher-dev/auth",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "author": "Ibrahim Zaher",
   "license": "MIT",
   "peerDependencies": {
