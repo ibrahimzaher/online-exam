@@ -48,28 +48,6 @@ export class AppModule {}
 
 ## Usage
 
-### Using the Facade (Recommended)
-
-```ts
-import { Component } from '@angular/core';
-import { AuthFacade } from '@izaher-dev/auth';
-
-@Component({
-  selector: 'app-my-component',
-  templateUrl: './my-component.html',
-})
-export class MyComponent {
-  constructor(private auth: AuthFacade) {}
-
-  login() {
-    this.auth.login({ email: 'user@example.com', password: 'password' }).subscribe({
-      next: (user) => console.log(user),
-      error: (err) => console.error(err),
-    });
-  }
-}
-```
-
 ### Using Individual UseCases
 
 ```ts
@@ -107,10 +85,6 @@ this.loginUsecase.execute({ email, password }).subscribe(...);
 - **Adaptors:** `AuthApiAdaptor`
 - **Endpoints:** `AuthApiEndPoint`
 
-### Application
-
-- **AuthFacade** to simplify usage
-
 ---
 
 ## DTOs
@@ -137,6 +111,16 @@ this.loginUsecase.execute({ email, password }).subscribe(...);
 - ForgetPasswordResDTO
 - ResetPasswordResDTO
 - VerifyResetCodeResDTO
+
+---
+
+## Response
+
+- AuthResponse
+- ProfileResponse
+- MessageResponse
+- StatusResponse
+- PasswordResponse
 
 ---
 
