@@ -1,11 +1,11 @@
 {
   "name": "@izaher-dev/auth",
-  "version": "0.0.9",
+  "version": "1.0.2",
   "author": "Ibrahim Zaher",
   "license": "MIT",
   "peerDependencies": {
-    "@angular/common": "^16.0.0",
-    "@angular/core": "^16.0.0"
+    "@angular/common": ">=16.0.0",
+    "@angular/core": ">=16.0.0"
   },
   "main": "bundles/auth.umd.js",
   "module": "fesm2015/auth.js",

@@ -15,8 +15,8 @@ export interface UserDTO {
   isVerified: boolean;
   createdAt: string;
 }
+export type RegisterResDTO = LoginResDTO;
 
-export interface RegisterResDTO extends LoginResDTO { }
 export interface EditProfileResDTO {
   message: string;
   user: UserDTO;
@@ -28,8 +28,8 @@ export interface ChangePasswordResDTO {
 export interface DeleteMeResDTO {
   message: string;
 }
-export interface LogOutResDTO extends DeleteMeResDTO { }
-export interface ProfileDataResDTO extends EditProfileResDTO { }
+export type LogOutResDTO = DeleteMeResDTO;
+export type ProfileDataResDTO = EditProfileResDTO;
 export interface ForgetPasswordResDTO {
   message: string;
   info: string;

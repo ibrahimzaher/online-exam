@@ -1,52 +1,58 @@
 import { Injectable } from '@angular/core';
 import { AuthAdaptor } from '../../domain/adaptor/auth-adaptor';
 import { User } from '../../domain/entities/user';
-import { LoginResDTO, RegisterResDTO, ProfileDataResDTO, EditProfileResDTO, ForgetPasswordResDTO } from '../dto/auth-res.dto';
+import {
+  LoginResDTO,
+  RegisterResDTO,
+  ProfileDataResDTO,
+  EditProfileResDTO,
+  ForgetPasswordResDTO,
+} from '../dto/auth-res.dto';
+import {
+  AuthResponse,
+  MessageResponse,
+  ProfileResponse,
+} from '../../domain/responses/auth-response';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthApiAdaptor implements AuthAdaptor {
-  adaptLogin(data: LoginResDTO): { message: string, token: string, user: User } {
+  private adaptUser(dto: any): User {
+    return {
+      id: dto._id,
+      email: dto.email,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      phone: dto.phone,
+      role: dto.role,
+      username: dto.username,
+    };
+  }
+  adaptLogin(data: LoginResDTO): AuthResponse {
     return {
       message: data.message,
       token: data.token,
-      user: {
-        email: data.user.email,
-        firstName: data.user.firstName,
-        id: data.user._id,
-        lastName: data.user.lastName,
-        phone: data.user.phone,
-        role: data.user.role,
-        username: data.user.username,
-      }
-    }
+      user: this.adaptUser(data.user),
+    };
   }
-  adaptRegister(data: RegisterResDTO): { message: string, token: string, user: User } {
+  adaptRegister(data: RegisterResDTO): AuthResponse {
     return this.adaptLogin(data);
   }
-  adaptProfileData(data: ProfileDataResDTO): { message: string, user: User } {
+  adaptProfileData(data: ProfileDataResDTO): ProfileResponse {
     return {
       message: data.message,
-      user: {
-        email: data.user.email,
-        firstName: data.user.firstName,
-        id: data.user._id,
-        lastName: data.user.lastName,
-        phone: data.user.phone,
-        role: data.user.role,
-        username: data.user.username,
-      }
-    }
+      user: this.adaptUser(data.user),
+    };
   }
-  adaptEditProfile(data: EditProfileResDTO): { message: string } {
+  adaptEditProfile(data: EditProfileResDTO): MessageResponse {
     return {
       message: data.message,
-    }
+    };
   }
-  adaptForgetPassword(data: ForgetPasswordResDTO): { message: string } {
+  adaptForgetPassword(data: ForgetPasswordResDTO): MessageResponse {
     return {
       message: data.message,
-    }
+    };
   }
 }

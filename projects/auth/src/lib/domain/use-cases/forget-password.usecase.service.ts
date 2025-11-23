@@ -5,7 +5,7 @@ import { AuthRepo } from '../repo/auth-repo';
 @Injectable({
   providedIn: 'root',
 })
-export class ForgetPaswwordUsecaseService {
+export class ForgetPasswordUsecaseService {
   private readonly _authRepository = inject(AuthRepo);
   execute(data: ForgetPasswordReqDTO) {
     return this._authRepository.forgetPassword(data);
