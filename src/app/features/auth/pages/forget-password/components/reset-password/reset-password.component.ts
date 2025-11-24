@@ -11,7 +11,10 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { InputFieldComponent } from '../../../../../../shared/ui/input-field/input-field.component';
 import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
-import { matchFieldsValidator } from '../../../../../../shared/utils/validators.utils';
+import {
+  matchFieldsValidator,
+  PASSWORD_PATTERN,
+} from '../../../../../../shared/utils/validators.utils';
 import { ResetPasswordUsecaseService } from '@izaher-dev/auth';
 import { ToasterService } from '../../../../../../core/services/toaster.service';
 import { finalize, takeUntil, tap } from 'rxjs';
@@ -37,13 +40,7 @@ export class ResetPasswordComponent implements OnInit {
   ngOnInit(): void {
     this.resetForm = this._fb.group(
       {
-        password: [
-          null,
-          [
-            Validators.required,
-            Validators.pattern(/^(?=\S+$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/),
-          ],
-        ],
+        password: [null, [Validators.required, Validators.pattern(PASSWORD_PATTERN)]],
         newPassword: [null, [Validators.required]],
       },
       {

@@ -1,7 +1,14 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet } from '@angular/router';
+import {
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router,
+  RouterOutlet,
+} from '@angular/router';
 import { Toast } from 'primeng/toast';
-import { ProgressComponent } from "./core/components/progress/progress.component";
+import { ProgressComponent } from './shared/ui/progress/progress.component';
 import { LoadingService } from './core/services/loading.service';
 import { ProgressBarModule } from 'primeng/progressbar';
 @Component({
@@ -15,7 +22,7 @@ export class App implements OnInit {
   private _loading = inject(LoadingService);
   private _router = inject(Router);
   ngOnInit(): void {
-    this._router.events.subscribe(event => {
+    this._router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
         this._loading.show();
       } else if (

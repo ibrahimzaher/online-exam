@@ -10,7 +10,7 @@ import {
 import { RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
 import { InputFieldComponent } from '../../../../../../shared/ui/input-field/input-field.component';
-import { ForgetPaswwordUsecaseService } from '@izaher-dev/auth';
+import { ForgetPasswordUsecaseService } from '@izaher-dev/auth';
 import { finalize, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -22,7 +22,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class ForgetComponent {
   private readonly _fb = inject(FormBuilder);
-  private readonly _forgetUseCaseService = inject(ForgetPaswwordUsecaseService);
+  private readonly _forgetUseCaseService = inject(ForgetPasswordUsecaseService);
   private readonly _destroyRef = inject(DestroyRef);
   private readonly _toasterService = inject(ToasterService);
   step = output<number>();

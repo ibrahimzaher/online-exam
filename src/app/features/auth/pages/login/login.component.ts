@@ -19,6 +19,7 @@ import { LoginUsecaseService } from '@izaher-dev/auth';
 import { StorageService } from '../../../../core/services/storage.service';
 import { ToasterService } from '../../../../core/services/toaster.service';
 import { catchError, finalize, of, tap } from 'rxjs';
+import { PASSWORD_PATTERN } from '../../../../shared/utils/validators.utils';
 
 @Component({
   selector: 'app-login',
@@ -40,13 +41,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.loginForm = this._fb.group({
       email: [null, [Validators.required, Validators.email]],
-      password: [
-        null,
-        [
-          Validators.required,
-          Validators.pattern(/^(?=\S+$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/),
-        ],
-      ],
+      password: [null, [Validators.required, Validators.pattern(PASSWORD_PATTERN)]],
     });
   }
   private readonly _fb = inject(FormBuilder);
@@ -70,19 +65,21 @@ export class LoginComponent implements OnInit {
       return;
     }
     this.loginLoading.set(true);
-    this._loginUseCase.execute(this.loginForm.value).pipe(
-      tap((data) => {
-        this._toaster.show(data.message, true);
-      }),
-      takeUntilDestroyed(this._destroyRef),
-      finalize(() => this.loginLoading.set(false))
-    ).subscribe({
-      next: (data) => {
-        this._storage.setItem<string>('token', data.token);
-        this._router.navigate(['/dash'], { replaceUrl: true });
-      },
-    })
-
+    this._loginUseCase
+      .execute(this.loginForm.value)
+      .pipe(
+        tap((data) => {
+          this._toaster.show(data.message, true);
+        }),
+        takeUntilDestroyed(this._destroyRef),
+        finalize(() => this.loginLoading.set(false))
+      )
+      .subscribe({
+        next: (data) => {
+          this._storage.setItem<string>('token', data.token);
+          this._router.navigate(['/dash'], { replaceUrl: true });
+        },
+        error: (err) => console.log(err),
+      });
   }
-
 }

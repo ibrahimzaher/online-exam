@@ -12,7 +12,12 @@ import { Router, RouterLink } from '@angular/router';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { InputFieldComponent } from '../../../../shared/ui/input-field/input-field.component';
-import { matchFieldsValidator } from '../../../../shared/utils/validators.utils';
+import {
+  matchFieldsValidator,
+  MAX_LENGTH,
+  MIN_LENGTH,
+  PASSWORD_PATTERN,
+} from '../../../../shared/utils/validators.utils';
 import { RegisterUsecaseService } from '@izaher-dev/auth';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize, tap } from 'rxjs';
@@ -43,19 +48,22 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.registerForm = this._fb.group(
       {
-        username: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
-        firstName: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
-        lastName: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
-        email: [null, [Validators.required, Validators.email]],
-        password: [
+        username: [
           null,
-          [
-            Validators.required,
-            Validators.pattern(/^(?=\S+$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/),
-          ],
+          [Validators.required, Validators.minLength(MIN_LENGTH), Validators.maxLength(MAX_LENGTH)],
         ],
+        firstName: [
+          null,
+          [Validators.required, Validators.minLength(MIN_LENGTH), Validators.maxLength(MAX_LENGTH)],
+        ],
+        lastName: [
+          null,
+          [Validators.required, Validators.minLength(MIN_LENGTH), Validators.maxLength(MAX_LENGTH)],
+        ],
+        email: [null, [Validators.required, Validators.email]],
+        password: [null, [Validators.required, Validators.pattern(PASSWORD_PATTERN)]],
         rePassword: [null, [Validators.required]],
-        phone: [null, [Validators.required,]],
+        phone: [null, [Validators.required]],
       },
       {
         validators: matchFieldsValidator('password', 'rePassword'),
@@ -85,7 +93,6 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
-
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
       return;

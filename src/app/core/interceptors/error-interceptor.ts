@@ -8,7 +8,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((err: HttpErrorResponse) => {
       let message = 'An unexpected error occurred';
-      if ((err.status === 0 || err instanceof ProgressEvent)) {
+      if (err.status === 0 || err instanceof ProgressEvent) {
         message = 'Network error: Please check your connection';
       } else if (err.error?.message) {
         message = err.error.message;

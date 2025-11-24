@@ -36,7 +36,13 @@
   </div>
 
   <p class="text-gray-400 text-sm text-center mb-10">
-    You can request another code in: <span class="font-semibold text-gray-500">60s</span>
+    You can request another code in: @if (timer()!=0) {
+    <span class="font-semibold text-gray-500">{{ timer() }}s</span>
+    } @else {
+    <span class="font-bold text-primary cursor-pointer" (click)="requestCode()"
+      >Request new code</span
+    >
+    }
   </p>
   <app-button label="Verify Code" [loading]="verifyLoading()"></app-button>
 

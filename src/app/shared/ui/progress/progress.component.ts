@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
-import { ProgressBar } from "primeng/progressbar";
-import { LoadingService } from '../../services/loading.service';
+import { ProgressBar } from 'primeng/progressbar';
+import { LoadingService } from '../../../core/services/loading.service';
 
 @Component({
   selector: 'app-progress',
