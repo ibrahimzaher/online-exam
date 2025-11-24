@@ -1,7 +1,7 @@
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
-  provideZonelessChangeDetection,
+  provideZonelessChangeDetection, isDevMode,
 } from '@angular/core';
 import Aura from '@primeuix/themes/aura';
 import { provideRouter, withHashLocation, withInMemoryScrolling } from '@angular/router';
@@ -16,6 +16,9 @@ import { MessageService } from 'primeng/api';
 import { errorInterceptor } from './core/interceptors/error-interceptor';
 import { tokenInterceptor } from './core/interceptors/token-interceptor';
 import { loadingInterceptor } from './core/interceptors/loading-interceptor';
+import { provideStore } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,24 +26,27 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideHttpClient(withFetch(), withInterceptors([loadingInterceptor, tokenInterceptor, errorInterceptor])),
     provideRouter(routes, withHashLocation(), withInMemoryScrolling({
-      scrollPositionRestoration: 'top',
-      anchorScrolling: 'enabled'
+        scrollPositionRestoration: 'top',
+        anchorScrolling: 'enabled'
     })),
     provideAnimationsAsync(),
     MessageService,
     ...AUTH_PROVIDERS,
     { provide: API_CONFIG, useValue: { baseUrl: environment.baseUrl } },
     providePrimeNG({
-      theme: {
-        preset: Aura,
-        options: {
-          darkModeSelector: '.dark',
-          cssLayer: {
-            name: 'primeng',
-            order: 'theme, base, primeng',
-          },
+        theme: {
+            preset: Aura,
+            options: {
+                darkModeSelector: '.dark',
+                cssLayer: {
+                    name: 'primeng',
+                    order: 'theme, base, primeng',
+                },
+            },
         },
-      },
     }),
-  ],
+    provideStore(),
+    provideEffects(),
+    provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() })
+],
 };
