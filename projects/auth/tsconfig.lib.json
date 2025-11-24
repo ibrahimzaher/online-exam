@@ -1,0 +1,22 @@
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/lib",
+    "target": "ES2020", // Modern JS output
+    "module": "ES2020", // Use ES modules
+    "declaration": true, // Generate .d.ts files
+    "declarationMap": true, // Map declarations for easier debugging
+    "sourceMap": true, // Generate source maps
+    "inlineSources": true, // Embed sources in sourcemaps
+    "types": [], // Avoid including unwanted types
+    "strict": true, // Enable strict type checking
+    "skipLibCheck": true, // Skip type checking of dependencies
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["**/*.spec.ts", "test.ts", "src/test-setup.ts"]
+}
