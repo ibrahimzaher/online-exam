@@ -1,16 +1,31 @@
-import { Observable } from "rxjs";
-import { User } from "../entities/user";
-import { LoginRequestDTO, RegisterRequestDTO, ChangePasswordReqDTO, EditProfileReqDTO, ForgetPasswordReqDTO, VerifyResetCodeReqDTO, ResetPasswordReqDTO } from "../../data/dto/auth-req.dto";
+import { Observable } from 'rxjs';
+import {
+  AuthModel,
+  MessageModel,
+  PasswordModel,
+  ProfileModel,
+  StatusModel,
+  UserModel,
+} from '../models/auth.model';
+import {
+  LoginRequest,
+  RegisterRequest,
+  ChangePasswordReq,
+  EditProfileReq,
+  ForgetPasswordReq,
+  VerifyResetCodeReq,
+  ResetPasswordReq,
+} from '../../data/dto/auth-req';
 
 export abstract class AuthRepo {
-    abstract login(data: LoginRequestDTO): Observable<{ message: string; token: string; user: User }>;
-    abstract register(data: RegisterRequestDTO): Observable<{ message: string; token: string; user: User }>;
-    abstract changePassword(data: ChangePasswordReqDTO): Observable<{ message: string; token: string }>;
-    abstract deleteMe(): Observable<{ message: string }>;
-    abstract logout(): Observable<{ message: string }>;
-    abstract profileData(): Observable<{ message: string; user: User }>;
-    abstract editProfile(data: EditProfileReqDTO): Observable<{ message: string }>;
-    abstract forgetPassword(data: ForgetPasswordReqDTO): Observable<{ message: string }>;
-    abstract verifyResetCode(data: VerifyResetCodeReqDTO): Observable<{ status: string }>;
-    abstract resetPassword(data: ResetPasswordReqDTO): Observable<{ message: string; token: string }>;
+  abstract login(data: LoginRequest): Observable<AuthModel>;
+  abstract register(data: RegisterRequest): Observable<AuthModel>;
+  abstract changePassword(data: ChangePasswordReq): Observable<PasswordModel>;
+  abstract deleteMe(): Observable<MessageModel>;
+  abstract logout(): Observable<MessageModel>;
+  abstract profileData(): Observable<ProfileModel>;
+  abstract editProfile(data: EditProfileReq): Observable<MessageModel>;
+  abstract forgetPassword(data: ForgetPasswordReq): Observable<MessageModel>;
+  abstract verifyResetCode(data: VerifyResetCodeReq): Observable<StatusModel>;
+  abstract resetPassword(data: ResetPasswordReq): Observable<PasswordModel>;
 }

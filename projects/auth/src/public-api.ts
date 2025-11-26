@@ -3,9 +3,8 @@
  */
 
 // Domain
-export * from './lib/domain/entities/user';
-export * from './lib/domain/responses/auth-response';
-
+export * from './lib/domain/models/auth.model';
+export * from './lib/data/dto/auth-req';
 export * from './lib/domain/use-cases/change-password.usecase.service';
 export * from './lib/domain/use-cases/register.usecase.service';
 export * from './lib/domain/use-cases/delete-me.usecase.service';

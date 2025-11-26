@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { EditProfileReqDTO } from '../../data/dto/auth-req.dto';
+import { EditProfileReq } from '../../data/dto/auth-req';
 import { AuthRepo } from '../repo/auth-repo';
 
 @Injectable({
@@ -7,7 +7,7 @@ import { AuthRepo } from '../repo/auth-repo';
 })
 export class EditProfileUsecaseService {
   private readonly _authRepository = inject(AuthRepo);
-  execute(data: EditProfileReqDTO) {
+  execute(data: EditProfileReq) {
     return this._authRepository.editProfile(data);
   }
 }

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { VerifyResetCodeReqDTO } from '../../data/dto/auth-req.dto';
+import { VerifyResetCodeReq } from '../../data/dto/auth-req';
 import { AuthRepo } from '../repo/auth-repo';
 
 @Injectable({
@@ -7,7 +7,7 @@ import { AuthRepo } from '../repo/auth-repo';
 })
 export class VerifyResetCodeUsecaseService {
   private readonly _authRepository = inject(AuthRepo);
-  execute(data: VerifyResetCodeReqDTO) {
+  execute(data: VerifyResetCodeReq) {
     return this._authRepository.verifyResetCode(data);
   }
 }

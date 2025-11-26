@@ -1,24 +1,19 @@
 import { Injectable } from '@angular/core';
 import { AuthAdaptor } from '../../domain/adaptor/auth-adaptor';
-import { User } from '../../domain/entities/user';
+import { AuthModel, MessageModel, ProfileModel, UserModel } from '../../domain/models/auth.model';
 import {
-  LoginResDTO,
-  RegisterResDTO,
-  ProfileDataResDTO,
-  EditProfileResDTO,
-  ForgetPasswordResDTO,
-} from '../dto/auth-res.dto';
-import {
-  AuthResponse,
-  MessageResponse,
-  ProfileResponse,
-} from '../../domain/responses/auth-response';
+  LoginRes,
+  RegisterRes,
+  ProfileDataRes,
+  EditProfileRes,
+  ForgetPasswordRes,
+} from '../dto/auth-res';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthApiAdaptor implements AuthAdaptor {
-  private adaptUser(dto: any): User {
+  private adaptUser(dto: any): UserModel {
     return {
       id: dto._id,
       email: dto.email,
@@ -29,28 +24,28 @@ export class AuthApiAdaptor implements AuthAdaptor {
       username: dto.username,
     };
   }
-  adaptLogin(data: LoginResDTO): AuthResponse {
+  adaptLogin(data: LoginRes): AuthModel {
     return {
       message: data.message,
       token: data.token,
       user: this.adaptUser(data.user),
     };
   }
-  adaptRegister(data: RegisterResDTO): AuthResponse {
+  adaptRegister(data: RegisterRes): AuthModel {
     return this.adaptLogin(data);
   }
-  adaptProfileData(data: ProfileDataResDTO): ProfileResponse {
+  adaptProfileData(data: ProfileDataRes): ProfileModel {
     return {
       message: data.message,
       user: this.adaptUser(data.user),
     };
   }
-  adaptEditProfile(data: EditProfileResDTO): MessageResponse {
+  adaptEditProfile(data: EditProfileRes): MessageModel {
     return {
       message: data.message,
     };
   }
-  adaptForgetPassword(data: ForgetPasswordResDTO): MessageResponse {
+  adaptForgetPassword(data: ForgetPasswordRes): MessageModel {
     return {
       message: data.message,
     };

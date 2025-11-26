@@ -1,7 +1,7 @@
-import { AuthRepo } from './auth-repo';
+import { AuthApiRepo } from '../../data/api/auth-api-repo';
 
 describe('AuthRepo', () => {
   it('should create an instance', () => {
-    expect(new AuthRepo()).toBeTruthy();
+    expect(new AuthApiRepo()).toBeTruthy();
   });
 });
