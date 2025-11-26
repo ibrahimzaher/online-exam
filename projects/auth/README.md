@@ -63,7 +63,13 @@ this.loginUsecase.execute({ email, password }).subscribe(...);
 
 ### Domain
 
-- **User entity**
+- **Models**
+  - UserModel
+  - AuthModel
+  - ProfileModel
+  - MessageModel
+  - StatusModel
+  - PasswordModel
 - **AuthRepo interface**
 - **UseCases:**
   - LoginUsecaseService
@@ -91,36 +97,26 @@ this.loginUsecase.execute({ email, password }).subscribe(...);
 
 ### Request DTOs
 
-- LoginRequestDTO
-- RegisterRequestDTO
-- ChangePasswordReqDTO
-- EditProfileReqDTO
-- ForgetPasswordReqDTO
-- ResetPasswordReqDTO
-- VerifyResetCodeReqDTO
+- LoginRequest
+- RegisterRequest
+- ChangePasswordReq
+- EditProfileReq
+- ForgetPasswordReq
+- ResetPasswordReq
+- VerifyResetCodeReq
 
 ### Response DTOs
 
-- LoginResponseDTO
-- RegisterResponseDTO
-- ChangePasswordResDTO
-- DeleteMeResDTO
-- LogOutResDTO
-- ProfileDataResDTO
-- EditProfileResDTO
-- ForgetPasswordResDTO
-- ResetPasswordResDTO
-- VerifyResetCodeResDTO
-
----
-
-## Response
-
-- AuthResponse
-- ProfileResponse
-- MessageResponse
-- StatusResponse
-- PasswordResponse
+- LoginResponse
+- RegisterResponse
+- ChangePasswordRes
+- DeleteMeRes
+- LogOutRes
+- ProfileDataRes
+- EditProfileRes
+- ForgetPasswordRes
+- ResetPasswordRes
+- VerifyResetCodeRes
 
 ---
 

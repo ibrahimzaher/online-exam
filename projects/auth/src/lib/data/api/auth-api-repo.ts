@@ -2,24 +2,24 @@ import { inject, Injectable, Provider } from '@angular/core';
 import { AuthApiAdaptor } from './auth-api-adaptor';
 import { AuthRepo } from '../../domain/repo/auth-repo';
 import { map, Observable } from 'rxjs';
-import { User } from '../../domain/entities/user';
-import {
-  LoginRequestDTO,
-  RegisterRequestDTO,
-  ChangePasswordReqDTO,
-  EditProfileReqDTO,
-  ForgetPasswordReqDTO,
-  VerifyResetCodeReqDTO,
-  ResetPasswordReqDTO,
-} from '../dto/auth-req.dto';
 
 import { AuthApiService } from './auth-api-service';
 import {
-  AuthResponse,
-  MessageResponse,
-  PasswordResponse,
-  StatusResponse,
-} from '../../domain/responses/auth-response';
+  LoginRequest,
+  RegisterRequest,
+  ChangePasswordReq,
+  EditProfileReq,
+  ForgetPasswordReq,
+  VerifyResetCodeReq,
+  ResetPasswordReq,
+} from '../dto/auth-req';
+import {
+  AuthModel,
+  MessageModel,
+  PasswordModel,
+  StatusModel,
+  UserModel,
+} from '../../domain/models/auth.model';
 
 @Injectable({
   providedIn: 'root',
@@ -27,42 +27,42 @@ import {
 export class AuthApiRepo implements AuthRepo {
   private readonly _authService = inject(AuthApiService);
   private readonly _authAdaptor = inject(AuthApiAdaptor);
-  login(data: LoginRequestDTO): Observable<AuthResponse> {
+  login(data: LoginRequest): Observable<AuthModel> {
     return this._authService.login(data).pipe(map((data) => this._authAdaptor.adaptLogin(data)));
   }
-  register(data: RegisterRequestDTO): Observable<AuthResponse> {
+  register(data: RegisterRequest): Observable<AuthModel> {
     return this._authService
       .register(data)
       .pipe(map((data) => this._authAdaptor.adaptRegister(data)));
   }
-  changePassword(data: ChangePasswordReqDTO): Observable<PasswordResponse> {
+  changePassword(data: ChangePasswordReq): Observable<PasswordModel> {
     return this._authService.changePassword(data);
   }
-  deleteMe(): Observable<MessageResponse> {
+  deleteMe(): Observable<MessageModel> {
     return this._authService.deleteMe();
   }
-  logout(): Observable<MessageResponse> {
+  logout(): Observable<MessageModel> {
     return this._authService.logout();
   }
-  profileData(): Observable<{ message: string; user: User }> {
+  profileData(): Observable<{ message: string; user: UserModel }> {
     return this._authService
       .profileData()
       .pipe(map((data) => this._authAdaptor.adaptProfileData(data)));
   }
-  editProfile(data: EditProfileReqDTO): Observable<MessageResponse> {
+  editProfile(data: EditProfileReq): Observable<MessageModel> {
     return this._authService
       .editProfile(data)
       .pipe(map((data) => this._authAdaptor.adaptEditProfile(data)));
   }
-  forgetPassword(data: ForgetPasswordReqDTO): Observable<MessageResponse> {
+  forgetPassword(data: ForgetPasswordReq): Observable<MessageModel> {
     return this._authService
       .forgetPassword(data)
       .pipe(map((data) => this._authAdaptor.adaptForgetPassword(data)));
   }
-  verifyResetCode(data: VerifyResetCodeReqDTO): Observable<StatusResponse> {
+  verifyResetCode(data: VerifyResetCodeReq): Observable<StatusModel> {
     return this._authService.verifyResetCode(data);
   }
-  resetPassword(data: ResetPasswordReqDTO): Observable<PasswordResponse> {
+  resetPassword(data: ResetPasswordReq): Observable<PasswordModel> {
     return this._authService.resetPassword(data);
   }
 }

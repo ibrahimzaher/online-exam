@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { RegisterRequestDTO } from '../../data/dto/auth-req.dto';
+import { RegisterRequest } from '../../data/dto/auth-req';
 import { AuthRepo } from '../repo/auth-repo';
 
 @Injectable({
@@ -7,7 +7,7 @@ import { AuthRepo } from '../repo/auth-repo';
 })
 export class RegisterUsecaseService {
   private readonly _authRepository = inject(AuthRepo);
-  execute(data: RegisterRequestDTO) {
+  execute(data: RegisterRequest) {
     return this._authRepository.register(data);
   }
 }

@@ -1,16 +1,16 @@
 import {
-  EditProfileResDTO,
-  ForgetPasswordResDTO,
-  LoginResDTO,
-  ProfileDataResDTO,
-  RegisterResDTO,
-} from '../../data/dto/auth-res.dto';
-import { AuthResponse, MessageResponse, ProfileResponse } from '../responses/auth-response';
+  EditProfileRes,
+  ForgetPasswordRes,
+  LoginRes,
+  ProfileDataRes,
+  RegisterRes,
+} from '../../data/dto/auth-res';
+import { AuthModel, MessageModel, ProfileModel } from '../models/auth.model';
 
 export interface AuthAdaptor {
-  adaptLogin(data: LoginResDTO): AuthResponse;
-  adaptRegister(data: RegisterResDTO): AuthResponse;
-  adaptProfileData(data: ProfileDataResDTO): ProfileResponse;
-  adaptEditProfile(data: EditProfileResDTO): MessageResponse;
-  adaptForgetPassword(data: ForgetPasswordResDTO): MessageResponse;
+  adaptLogin(data: LoginRes): AuthModel;
+  adaptRegister(data: RegisterRes): AuthModel;
+  adaptProfileData(data: ProfileDataRes): ProfileModel;
+  adaptEditProfile(data: EditProfileRes): MessageModel;
+  adaptForgetPassword(data: ForgetPasswordRes): MessageModel;
 }

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { ForgetPasswordReqDTO } from '../../data/dto/auth-req.dto';
+import { ForgetPasswordReq } from '../../data/dto/auth-req';
 import { AuthRepo } from '../repo/auth-repo';
 
 @Injectable({
@@ -7,7 +7,7 @@ import { AuthRepo } from '../repo/auth-repo';
 })
 export class ForgetPasswordUsecaseService {
   private readonly _authRepository = inject(AuthRepo);
-  execute(data: ForgetPasswordReqDTO) {
+  execute(data: ForgetPasswordReq) {
     return this._authRepository.forgetPassword(data);
   }
 }
