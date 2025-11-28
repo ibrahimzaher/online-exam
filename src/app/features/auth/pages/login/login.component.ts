@@ -14,6 +14,10 @@ import { ToasterService } from '../../../../core/services/toaster.service';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { InputFieldComponent } from '../../../../shared/ui/input-field/input-field.component';
 import { AuthForms } from '../../forms/auth-forms.service';
+import { Store } from '@ngrx/store';
+import { selectLoadingKey } from '../../../../core/store/ui/ui.reducer';
+import { buttonLoginLoading } from '../../../../core/store/ui/ui.constant';
+import { AuthPageActions } from '../../store/auth.actions';
 
 @Component({
   selector: 'app-login',
@@ -32,13 +36,9 @@ import { AuthForms } from '../../forms/auth-forms.service';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  private readonly _loginUseCase = inject(LoginUsecaseService);
-  private readonly _storage = inject(StorageService);
-  private readonly _router = inject(Router);
-  private readonly _toaster = inject(ToasterService);
-  private readonly _destroyRef = inject(DestroyRef);
+  private readonly store = inject(Store);
   private readonly authForms = inject(AuthForms);
-  loginLoading = signal(false);
+  loading = this.store.selectSignal(selectLoadingKey(buttonLoginLoading));
   loginForm = this.authForms.initLoginForm();
   get controls(): Record<keyof LoginRequest, FormControl<string>> {
     return this.loginForm.controls;
@@ -48,22 +48,6 @@ export class LoginComponent {
       this.loginForm.markAllAsTouched();
       return;
     }
-    this.loginLoading.set(true);
-    this._loginUseCase
-      .execute(this.loginForm.getRawValue())
-      .pipe(
-        tap((data) => {
-          this._toaster.show(data.message, true);
-        }),
-        takeUntilDestroyed(this._destroyRef),
-        finalize(() => this.loginLoading.set(false))
-      )
-      .subscribe({
-        next: (data) => {
-          this._storage.setItem<string>('token', data.token);
-          this._router.navigate(['/dash'], { replaceUrl: true });
-        },
-        error: (err) => console.log(err),
-      });
+    this.store.dispatch(AuthPageActions.loginSubmitted(this.loginForm.getRawValue()));
   }
 }

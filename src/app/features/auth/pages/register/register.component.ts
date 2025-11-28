@@ -11,6 +11,10 @@ import { InputFieldComponent } from '../../../../shared/ui/input-field/input-fie
 import { AuthForms } from '../../forms/auth-forms.service';
 import { StorageService } from './../../../../core/services/storage.service';
 import { formatPhoneNumber } from '../../../../shared/utils/phone.utils';
+import { Store } from '@ngrx/store';
+import { selectLoadingKey } from '../../../../core/store/ui/ui.reducer';
+import { buttonRegisterLoading } from '../../../../core/store/ui/ui.constant';
+import { AuthPageActions } from '../../store/auth.actions';
 
 @Component({
   selector: 'app-register',
@@ -27,12 +31,8 @@ import { formatPhoneNumber } from '../../../../shared/utils/phone.utils';
 export class RegisterComponent {
   private readonly authforms = inject(AuthForms);
   registerForm = this.authforms.initRegisterForm();
-  private readonly _router = inject(Router);
-  private readonly _registerUsecaseService = inject(RegisterUsecaseService);
-  private readonly _destroyRef = inject(DestroyRef);
-  private readonly _storageService = inject(StorageService);
-  private readonly _toasterService = inject(ToasterService);
-  registerLoading = signal(false);
+  private readonly store = inject(Store);
+  loading = this.store.selectSignal(selectLoadingKey(buttonRegisterLoading));
   get controls(): Record<keyof RegisterRequest, FormControl<string>> {
     return this.registerForm.controls;
   }
@@ -44,19 +44,6 @@ export class RegisterComponent {
     }
     const cleanPhone = formatPhoneNumber(this.controls.phone.value);
     this.registerForm.patchValue({ phone: cleanPhone });
-    this.registerLoading.set(true);
-    this._registerUsecaseService
-      .execute(this.registerForm.getRawValue())
-      .pipe(
-        tap((data) => this._toasterService.show(data.message)),
-        takeUntilDestroyed(this._destroyRef),
-        finalize(() => this.registerLoading.set(false))
-      )
-      .subscribe({
-        next: (data) => {
-          this._storageService.setItem<string>('token', data.token);
-          this._router.navigate(['/dash'], { replaceUrl: true });
-        },
-      });
+    this.store.dispatch(AuthPageActions.registerSubmitted(this.registerForm.getRawValue()));
   }
 }

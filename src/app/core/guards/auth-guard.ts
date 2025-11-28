@@ -1,14 +1,16 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { StorageService } from '../services/storage.service';
+import { Store } from '@ngrx/store';
+import { selectIsLogin } from '../../features/auth/store/auth.reducer';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const _router = inject(Router);
-  const _storage = inject(StorageService);
+  const store = inject(Store);
 
-  const token = _storage.getItem<string>('token');
+  const isLogin = store.selectSignal(selectIsLogin);
 
-  if (token) {
+  if (isLogin()) {
     return true;
   } else {
     return _router.parseUrl('/login');

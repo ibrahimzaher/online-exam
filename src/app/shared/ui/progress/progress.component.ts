@@ -1,6 +1,7 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { ProgressBar } from 'primeng/progressbar';
-import { LoadingService } from '../../../core/services/loading.service';
+import { selectLoading } from '../../../core/store/ui/ui.reducer';
 
 @Component({
   selector: 'app-progress',
@@ -9,6 +10,6 @@ import { LoadingService } from '../../../core/services/loading.service';
   styleUrl: './progress.component.css',
 })
 export class ProgressComponent {
-  private readonly _loading = inject(LoadingService);
-  isLoading = computed(() => this._loading.loading());
+  private readonly store = inject(Store);
+  isLoading = this.store.selectSignal(selectLoading);
 }

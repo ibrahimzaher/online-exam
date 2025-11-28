@@ -3,7 +3,7 @@
   (ngSubmit)="verifyCode()"
   class="flex justify-center items-start flex-col min-h-screen p-10 w-full"
 >
-  <span (click)="step.emit(1)" class="cursor-pointer block mb-10">
+  <span (click)="changeSteps(1)" class="cursor-pointer block mb-10">
     <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="0.75" y="0.75" width="38.5" height="38.5" stroke="#E5E7EB" stroke-width="1.5" />
       <path
@@ -21,7 +21,7 @@
     <span class="font-semibold text-gray-500">{{ email() }}</span>
     <span
       class="text-primary cursor-pointer ml-2 underline-offset-2 underline"
-      (click)="step.emit(1)"
+      (click)="changeSteps(1)"
       >Edit</span
     >
   </p>
@@ -42,7 +42,7 @@
     >
     }
   </p>
-  <app-button label="Verify Code" class="w-full" [loading]="verifyLoading()"></app-button>
+  <app-button label="Verify Code" class="w-full" [loading]="loading()"></app-button>
 
   <p class="text-gray-400 text-center mt-6 font-medium w-full">
     Don’t have an account?

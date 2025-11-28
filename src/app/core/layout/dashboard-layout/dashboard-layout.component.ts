@@ -1,9 +1,9 @@
-import { Component, DestroyRef, inject } from '@angular/core';
-import { LogoutUsecaseService } from '@izaher-dev/auth';
-import { ButtonComponent } from "../../../shared/ui/button/button.component";
-import { StorageService } from '../../services/storage.service';
-import { Router } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AuthPageActions } from '../../../features/auth/store/auth.actions';
+import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { buttonLogoutLoading } from '../../store/ui/ui.constant';
+import { selectLoadingKey } from '../../store/ui/ui.reducer';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -12,18 +12,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrl: './dashboard-layout.component.css',
 })
 export class DashboardLayoutComponent {
-  private readonly _logoutUsecase = inject(LogoutUsecaseService);
-  private readonly _storage = inject(StorageService);
-  private readonly _router = inject(Router);
-  private readonly _destroyRef = inject(DestroyRef);
+  private store = inject(Store);
+  loading = this.store.selectSignal(selectLoadingKey(buttonLogoutLoading));
   logout() {
-    this._logoutUsecase.execute().pipe(
-      takeUntilDestroyed(this._destroyRef),
-    ).subscribe(
-      data => {
-        this._storage.removeItem('token');
-        this._router.navigate(['/login'], { replaceUrl: true });
-      }
-    )
+    this.store.dispatch(AuthPageActions.logoutSubmitted());
   }
 }

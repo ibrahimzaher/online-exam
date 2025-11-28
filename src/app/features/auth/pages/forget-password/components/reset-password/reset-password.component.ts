@@ -1,3 +1,4 @@
+import { AuthPageActions } from './../../../../store/auth.actions';
 import { Component, DestroyRef, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -9,6 +10,10 @@ import { ButtonComponent } from '../../../../../../shared/ui/button/button.compo
 import { InputFieldComponent } from '../../../../../../shared/ui/input-field/input-field.component';
 import { AuthForms } from '../../../../forms/auth-forms.service';
 import { StorageService } from './../../../../../../core/services/storage.service';
+import { Store } from '@ngrx/store';
+import { selectLoadingKey } from '../../../../../../core/store/ui/ui.reducer';
+import { buttonResetLoading } from '../../../../../../core/store/ui/ui.constant';
+import { selectForgetFlowEmail } from '../../../../store/auth.reducer';
 
 @Component({
   selector: 'app-reset-password',
@@ -17,16 +22,11 @@ import { StorageService } from './../../../../../../core/services/storage.servic
   styleUrl: './reset-password.component.css',
 })
 export class ResetPasswordComponent {
-  private readonly _resetPasswordUsecaseService = inject(ResetPasswordUsecaseService);
-  private readonly _destroyRef = inject(DestroyRef);
-  private readonly _toasterService = inject(ToasterService);
-  private readonly _router = inject(Router);
+  private readonly store = inject(Store);
+  loading = this.store.selectSignal(selectLoadingKey(buttonResetLoading));
+  email = this.store.selectSignal(selectForgetFlowEmail);
   private readonly authForms = inject(AuthForms);
-  private readonly _storageService = inject(StorageService);
   resetForm = this.authForms.initResetPasswrdForm();
-  resetLoading = signal(false);
-  verifyLoading = signal(false);
-  email = input.required<string>();
   get controls() {
     return this.resetForm.controls;
   }
@@ -35,24 +35,11 @@ export class ResetPasswordComponent {
       this.resetForm.markAllAsTouched();
       return;
     }
-    console.log(this.email);
-
-    this.resetLoading.set(true);
-    this._resetPasswordUsecaseService
-      .execute({
-        email: this.email(),
+    this.store.dispatch(
+      AuthPageActions.resetPasswordSubmitted({
+        email: this.email()!,
         newPassword: this.controls.rePassword.value,
       })
-      .pipe(
-        tap((data) => this._toasterService.show(data.message)),
-        takeUntilDestroyed(this._destroyRef),
-        finalize(() => this.resetLoading.set(false))
-      )
-      .subscribe({
-        next: (data) => {
-          this._storageService.setItem('token', data.token);
-          this._router.navigate(['/dash'], { replaceUrl: true });
-        },
-      });
+    );
   }
 }
