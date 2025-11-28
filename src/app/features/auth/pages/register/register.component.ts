@@ -1,27 +1,16 @@
-import { StorageService } from './../../../../core/services/storage.service';
-import { Component, inject, OnInit, DestroyRef, signal } from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormControl,
-  AbstractControl,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
-import { ButtonComponent } from '../../../../shared/ui/button/button.component';
-import { InputFieldComponent } from '../../../../shared/ui/input-field/input-field.component';
-import {
-  matchFieldsValidator,
-  MAX_LENGTH,
-  MIN_LENGTH,
-  PASSWORD_PATTERN,
-} from '../../../../shared/utils/validators.utils';
-import { RegisterUsecaseService } from '@izaher-dev/auth';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { RegisterRequest, RegisterUsecaseService } from '@izaher-dev/auth';
+import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 import { finalize, tap } from 'rxjs';
 import { ToasterService } from '../../../../core/services/toaster.service';
+import { ButtonComponent } from '../../../../shared/ui/button/button.component';
+import { InputFieldComponent } from '../../../../shared/ui/input-field/input-field.component';
+import { AuthForms } from '../../forms/auth-forms.service';
+import { StorageService } from './../../../../core/services/storage.service';
+import { formatPhoneNumber } from '../../../../shared/utils/phone.utils';
 
 @Component({
   selector: 'app-register',
@@ -35,61 +24,17 @@ import { ToasterService } from '../../../../core/services/toaster.service';
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
-export class RegisterComponent implements OnInit {
-  registerForm!: FormGroup;
-  private readonly _fb = inject(FormBuilder);
+export class RegisterComponent {
+  private readonly authforms = inject(AuthForms);
+  registerForm = this.authforms.initRegisterForm();
   private readonly _router = inject(Router);
   private readonly _registerUsecaseService = inject(RegisterUsecaseService);
   private readonly _destroyRef = inject(DestroyRef);
   private readonly _storageService = inject(StorageService);
   private readonly _toasterService = inject(ToasterService);
   registerLoading = signal(false);
-
-  ngOnInit(): void {
-    this.registerForm = this._fb.group(
-      {
-        username: [
-          null,
-          [Validators.required, Validators.minLength(MIN_LENGTH), Validators.maxLength(MAX_LENGTH)],
-        ],
-        firstName: [
-          null,
-          [Validators.required, Validators.minLength(MIN_LENGTH), Validators.maxLength(MAX_LENGTH)],
-        ],
-        lastName: [
-          null,
-          [Validators.required, Validators.minLength(MIN_LENGTH), Validators.maxLength(MAX_LENGTH)],
-        ],
-        email: [null, [Validators.required, Validators.email]],
-        password: [null, [Validators.required, Validators.pattern(PASSWORD_PATTERN)]],
-        rePassword: [null, [Validators.required]],
-        phone: [null, [Validators.required]],
-      },
-      {
-        validators: matchFieldsValidator('password', 'rePassword'),
-      }
-    );
-  }
-  get username() {
-    return this.registerForm.get('username') as FormControl;
-  }
-  get firstName() {
-    return this.registerForm.get('firstName') as FormControl;
-  }
-  get lastName() {
-    return this.registerForm.get('lastName') as FormControl;
-  }
-  get email() {
-    return this.registerForm.get('email') as FormControl;
-  }
-  get password() {
-    return this.registerForm.get('password') as FormControl;
-  }
-  get rePassword() {
-    return this.registerForm.get('rePassword') as FormControl;
-  }
-  get phone() {
-    return this.registerForm.get('phone') as FormControl;
+  get controls(): Record<keyof RegisterRequest, FormControl<string>> {
+    return this.registerForm.controls;
   }
 
   register() {
@@ -97,20 +42,11 @@ export class RegisterComponent implements OnInit {
       this.registerForm.markAllAsTouched();
       return;
     }
-    const phoneValue = this.phone.value;
-    let cleanPhone = phoneValue.e164Number.replace(/\D/g, '');
-
-    if (cleanPhone.startsWith('20')) {
-      cleanPhone = '0' + cleanPhone.substring(2);
-    }
-    if (cleanPhone.length === 10 && cleanPhone.startsWith('1')) {
-      cleanPhone = '0' + cleanPhone;
-    }
+    const cleanPhone = formatPhoneNumber(this.controls.phone.value);
     this.registerForm.patchValue({ phone: cleanPhone });
-
     this.registerLoading.set(true);
     this._registerUsecaseService
-      .execute(this.registerForm.value)
+      .execute(this.registerForm.getRawValue())
       .pipe(
         tap((data) => this._toasterService.show(data.message)),
         takeUntilDestroyed(this._destroyRef),

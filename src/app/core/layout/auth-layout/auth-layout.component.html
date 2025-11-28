@@ -1,11 +1,9 @@
-<section class="min-h-screen flex">
-  <aside
-    class="hidden lg:block bg-[#EFF6FFBF] shadow w-full py-29 px-32.75 lg:w-1/2 relative overflow-hidden"
-  >
+<section class="grid lg:grid-cols-2">
+  <aside class="bg-[#EFF6FFBF] relative overflow-hidden hidden lg:block">
     <app-bg-blur-blob></app-bg-blur-blob>
-    <header class="relative z-20">
+    <header class="flex justify-center flex-col min-h-screen p-10">
       <app-logo></app-logo>
-      <h1 class="font-bold text-base text-[1.875rem] font-sans mt-34 mb-15">
+      <h1 class="relative font-bold text-base text-[1.875rem] font-sans mt-34 mb-15">
         Empower your learning journey with our smart exam platform.
       </h1>
       <section class="flex flex-col space-y-9">
@@ -99,7 +97,7 @@
     </header>
   </aside>
 
-  <main class="w-full lg:w-1/2">
+  <main>
     <router-outlet></router-outlet>
   </main>
 </section>

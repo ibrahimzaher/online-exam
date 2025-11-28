@@ -1,25 +1,19 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import {
-  Validators,
-  FormBuilder,
-  FormGroup,
-  FormControl,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { MessageModule } from 'primeng/message';
-import { ButtonModule } from 'primeng/button';
 import { Router, RouterLink } from '@angular/router';
-import { InputFieldComponent } from '../../../../shared/ui/input-field/input-field.component';
-import { ButtonComponent } from '../../../../shared/ui/button/button.component';
-import { LoginUsecaseService } from '@izaher-dev/auth';
+import { LoginUsecaseService, LoginRequest } from '@izaher-dev/auth';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
+import { PasswordModule } from 'primeng/password';
+import { finalize, tap } from 'rxjs';
 import { StorageService } from '../../../../core/services/storage.service';
 import { ToasterService } from '../../../../core/services/toaster.service';
-import { catchError, finalize, of, tap } from 'rxjs';
-import { PASSWORD_PATTERN } from '../../../../shared/utils/validators.utils';
+import { ButtonComponent } from '../../../../shared/ui/button/button.component';
+import { InputFieldComponent } from '../../../../shared/ui/input-field/input-field.component';
+import { AuthForms } from '../../forms/auth-forms.service';
 
 @Component({
   selector: 'app-login',
@@ -37,27 +31,17 @@ import { PASSWORD_PATTERN } from '../../../../shared/utils/validators.utils';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent implements OnInit {
-  ngOnInit(): void {
-    this.loginForm = this._fb.group({
-      email: [null, [Validators.required, Validators.email]],
-      password: [null, [Validators.required, Validators.pattern(PASSWORD_PATTERN)]],
-    });
-  }
-  private readonly _fb = inject(FormBuilder);
+export class LoginComponent {
   private readonly _loginUseCase = inject(LoginUsecaseService);
   private readonly _storage = inject(StorageService);
   private readonly _router = inject(Router);
   private readonly _toaster = inject(ToasterService);
   private readonly _destroyRef = inject(DestroyRef);
-
+  private readonly authForms = inject(AuthForms);
   loginLoading = signal(false);
-  loginForm!: FormGroup;
-  get email() {
-    return this.loginForm.get('email') as FormControl;
-  }
-  get password() {
-    return this.loginForm.get('password') as FormControl;
+  loginForm = this.authForms.initLoginForm();
+  get controls(): Record<keyof LoginRequest, FormControl<string>> {
+    return this.loginForm.controls;
   }
   login() {
     if (this.loginForm.invalid) {
@@ -66,7 +50,7 @@ export class LoginComponent implements OnInit {
     }
     this.loginLoading.set(true);
     this._loginUseCase
-      .execute(this.loginForm.value)
+      .execute(this.loginForm.getRawValue())
       .pipe(
         tap((data) => {
           this._toaster.show(data.message, true);

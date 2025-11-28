@@ -216,3 +216,17 @@ ngx-intl-tel-input.ng-invalid.ng-touched input {
   justify-items: center;
   align-items: center;
 }
+.p-password-toggle-mask-icon {
+  cursor: pointer;
+}
+.otp-field {
+  @apply outline-gray-300 rounded-md px-2 py-2 text-center;
+}
+
+.otp-field:focus {
+  @apply outline-primary;
+}
+
+.ng-invalid.ng-touched .otp-field {
+  @apply outline-danger;
+}

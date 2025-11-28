@@ -1,24 +1,14 @@
-import { StorageService } from './../../../../../../core/services/storage.service';
-import { Component, DestroyRef, inject, Input, input, OnInit, signal } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { InputFieldComponent } from '../../../../../../shared/ui/input-field/input-field.component';
-import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
-import {
-  matchFieldsValidator,
-  PASSWORD_PATTERN,
-} from '../../../../../../shared/utils/validators.utils';
-import { ResetPasswordUsecaseService } from '@izaher-dev/auth';
-import { ToasterService } from '../../../../../../core/services/toaster.service';
-import { finalize, takeUntil, tap } from 'rxjs';
+import { Component, DestroyRef, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { ResetPasswordUsecaseService } from '@izaher-dev/auth';
+import { finalize, tap } from 'rxjs';
+import { ToasterService } from '../../../../../../core/services/toaster.service';
+import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
+import { InputFieldComponent } from '../../../../../../shared/ui/input-field/input-field.component';
+import { AuthForms } from '../../../../forms/auth-forms.service';
+import { StorageService } from './../../../../../../core/services/storage.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -26,34 +16,19 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.css',
 })
-export class ResetPasswordComponent implements OnInit {
+export class ResetPasswordComponent {
   private readonly _resetPasswordUsecaseService = inject(ResetPasswordUsecaseService);
   private readonly _destroyRef = inject(DestroyRef);
   private readonly _toasterService = inject(ToasterService);
   private readonly _router = inject(Router);
-  private readonly _fb = inject(FormBuilder);
+  private readonly authForms = inject(AuthForms);
   private readonly _storageService = inject(StorageService);
-  resetForm!: FormGroup;
+  resetForm = this.authForms.initResetPasswrdForm();
   resetLoading = signal(false);
   verifyLoading = signal(false);
   email = input.required<string>();
-  ngOnInit(): void {
-    this.resetForm = this._fb.group(
-      {
-        password: [null, [Validators.required, Validators.pattern(PASSWORD_PATTERN)]],
-        newPassword: [null, [Validators.required]],
-      },
-      {
-        validators: matchFieldsValidator('password', 'newPassword'),
-      }
-    );
-  }
-
-  get password() {
-    return this.resetForm.get('password') as FormControl;
-  }
-  get newPassword() {
-    return this.resetForm.get('newPassword') as FormControl;
+  get controls() {
+    return this.resetForm.controls;
   }
   resetPassword() {
     if (this.resetForm.invalid) {
@@ -66,7 +41,7 @@ export class ResetPasswordComponent implements OnInit {
     this._resetPasswordUsecaseService
       .execute({
         email: this.email(),
-        newPassword: this.newPassword.value,
+        newPassword: this.controls.rePassword.value,
       })
       .pipe(
         tap((data) => this._toasterService.show(data.message)),

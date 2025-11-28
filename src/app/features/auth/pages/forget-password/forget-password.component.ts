@@ -1,9 +1,8 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ForgetComponent } from './components/forget/forget.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { VerifyCodeComponent } from './components/verify-code/verify-code.component';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-forget-password',
