@@ -6,27 +6,14 @@ export function getErrorMessage(
   const label = options?.label ?? 'Field';
   const type = options?.type ?? 'text';
 
-  if (type === 'otp') {
-    switch (key) {
-      case 'required':
-        return 'OTP is required';
-
-      case 'minlength':
-        return `OTP must be at least ${value.requiredLength} digits`;
-
-      case 'maxlength':
-        return `OTP must be at most ${value.requiredLength} digits`;
-
-      default:
-        return 'Invalid OTP';
-    }
-  }
-
   switch (key) {
     case 'required':
       return `${label} is required`;
 
     case 'minlength':
+      if (type === 'otp') {
+        return `OTP must be at most ${value.requiredLength} digits`;
+      }
       return `Minimum length is ${value.requiredLength} characters`;
 
     case 'maxlength':

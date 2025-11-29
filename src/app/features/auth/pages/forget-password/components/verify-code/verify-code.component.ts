@@ -1,19 +1,18 @@
-import { Component, DestroyRef, inject, input, output, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ForgetPasswordUsecaseService, VerifyResetCodeUsecaseService } from '@izaher-dev/auth';
-import { finalize, interval, takeWhile, tap } from 'rxjs';
+import { Actions, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { interval, takeWhile, tap } from 'rxjs';
 import { PlatformService } from '../../../../../../core/services/platform.service';
-import { ToasterService } from '../../../../../../core/services/toaster.service';
+import { buttonVerifyLoading } from '../../../../../../core/store/ui/ui.constant';
+import { selectLoadingKey } from '../../../../../../core/store/ui/ui.reducer';
 import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
 import { InputFieldComponent } from '../../../../../../shared/ui/input-field/input-field.component';
-import { AuthForms } from './../../../../forms/auth-forms.service';
-import { Store } from '@ngrx/store';
-import { selectLoadingKey } from '../../../../../../core/store/ui/ui.reducer';
-import { buttonVerifyLoading } from '../../../../../../core/store/ui/ui.constant';
+import { AuthApiActions, AuthPageActions } from '../../../../store/auth.actions';
 import { selectForgetFlowEmail } from '../../../../store/auth.reducer';
-import { AuthPageActions } from '../../../../store/auth.actions';
+import { AuthForms } from './../../../../forms/auth-forms.service';
 
 @Component({
   selector: 'app-verify-code',
@@ -30,6 +29,7 @@ export class VerifyCodeComponent {
   private destroy = inject(DestroyRef);
   email = this.store.selectSignal(selectForgetFlowEmail);
   otpFrom = this.authForms.initVerifyCoderForm();
+  private actions$ = inject(Actions);
   startDownTimer() {
     if (!this.platform.isBrowser()) return;
     this.timer.set(60);
@@ -41,7 +41,14 @@ export class VerifyCodeComponent {
       )
       .subscribe();
   }
-
+  constructor() {
+    this.actions$
+      .pipe(ofType(AuthApiActions.forgetPasswordSuccess), takeUntilDestroyed(this.destroy))
+      .subscribe(() => {
+        console.log('Forget Password Success Action Received - Starting Timer');
+        this.startDownTimer();
+      });
+  }
   ngAfterViewInit(): void {
     this.startDownTimer();
   }

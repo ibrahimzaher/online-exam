@@ -1,5 +1,5 @@
 <div class="flex flex-col gap-2 w-full">
-  @if (label()) {
+  @if (label() && type()!='otp') {
   <label [for]="id()" class="text-[16px] font-medium text-base">{{ label() }}</label>
   }@if (type()==='otp') {
   <div class="flex justify-center items-center py-2">
