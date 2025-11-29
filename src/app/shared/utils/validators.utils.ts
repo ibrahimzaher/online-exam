@@ -1,5 +1,7 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-
+export const PASSWORD_PATTERN: RegExp = /^(?=\S+$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/;
+export const MIN_LENGTH: number = 3;
+export const MAX_LENGTH: number = 15;
 export function matchFieldsValidator(
   controlName: string,
   matchingControlName: string

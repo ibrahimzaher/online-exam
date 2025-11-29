@@ -1,18 +1,23 @@
-import { Component, inject, OnInit } from '@angular/core';
-import {
-  Validators,
-  FormBuilder,
-  FormGroup,
-  FormControl,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { MessageModule } from 'primeng/message';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+
+import { Router, RouterLink } from '@angular/router';
+import { LoginUsecaseService, LoginRequest } from '@izaher-dev/auth';
 import { ButtonModule } from 'primeng/button';
-import { RouterLink } from '@angular/router';
-import { InputFieldComponent } from '../../../../shared/ui/input-field/input-field.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
+import { PasswordModule } from 'primeng/password';
+import { finalize, tap } from 'rxjs';
+import { StorageService } from '../../../../core/services/storage.service';
+import { ToasterService } from '../../../../core/services/toaster.service';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
+import { InputFieldComponent } from '../../../../shared/ui/input-field/input-field.component';
+import { AuthForms } from '../../forms/auth-forms.service';
+import { Store } from '@ngrx/store';
+import { selectLoadingKey } from '../../../../core/store/ui/ui.reducer';
+import { buttonLoginLoading } from '../../../../core/store/ui/ui.constant';
+import { AuthPageActions } from '../../store/auth.actions';
 
 @Component({
   selector: 'app-login',
@@ -30,28 +35,19 @@ import { ButtonComponent } from '../../../../shared/ui/button/button.component';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent implements OnInit {
-  ngOnInit(): void {
-    this.loginForm = this._fb.group({
-      email: [null, [Validators.required, Validators.email]],
-      password: [
-        null,
-        [
-          Validators.required,
-          Validators.pattern(/^(?=\S+$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/),
-        ],
-      ],
-    });
-  }
-  private readonly _fb = inject(FormBuilder);
-  loginForm!: FormGroup;
-  get email() {
-    return this.loginForm.get('email') as FormControl;
-  }
-  get password() {
-    return this.loginForm.get('password') as FormControl;
+export class LoginComponent {
+  private readonly store = inject(Store);
+  private readonly authForms = inject(AuthForms);
+  loading = this.store.selectSignal(selectLoadingKey(buttonLoginLoading));
+  loginForm = this.authForms.initLoginForm();
+  get controls(): Record<keyof LoginRequest, FormControl<string>> {
+    return this.loginForm.controls;
   }
   login() {
-    this.loginForm.valid ? console.log(this.loginForm.value) : this.loginForm.markAllAsTouched();
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+    this.store.dispatch(AuthPageActions.loginSubmitted(this.loginForm.getRawValue()));
   }
 }

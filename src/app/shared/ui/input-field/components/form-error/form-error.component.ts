@@ -1,5 +1,4 @@
-import { Component, computed, input } from '@angular/core';
-import { AbstractControl, FormControl } from '@angular/forms';
+import { Component, input } from '@angular/core';
 import { MessageModule } from 'primeng/message';
 import { getErrorMessage } from '../../../../utils/form-error.utils';
 
@@ -10,13 +9,10 @@ import { getErrorMessage } from '../../../../utils/form-error.utils';
   styleUrl: './form-error.component.css',
 })
 export class FormErrorComponent {
-  controller = input.required<FormControl | AbstractControl>();
+  controller = input.required<any>();
   label = input<string>();
-  otp = input<boolean>(false);
-  type = input<'text' | 'email' | 'password' | 'tel'>('text');
-  get controll(): FormControl {
-    return this.controller() as FormControl;
-  }
+  type = input<'text' | 'email' | 'password' | 'tel' | 'otp'>('text');
+
   get errorMessages(): string[] {
     const errors = this.controller().errors;
     if (!errors) return [];
@@ -24,7 +20,6 @@ export class FormErrorComponent {
     return Object.keys(errors).map((key) =>
       getErrorMessage(key, errors[key], {
         label: this.label(),
-        otp: this.otp(),
         type: this.type(),
       })
     );

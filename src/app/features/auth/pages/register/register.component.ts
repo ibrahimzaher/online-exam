@@ -1,17 +1,20 @@
-import { Component, inject, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormControl,
-  AbstractControl,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { RegisterRequest, RegisterUsecaseService } from '@izaher-dev/auth';
 import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
+import { finalize, tap } from 'rxjs';
+import { ToasterService } from '../../../../core/services/toaster.service';
 import { ButtonComponent } from '../../../../shared/ui/button/button.component';
 import { InputFieldComponent } from '../../../../shared/ui/input-field/input-field.component';
-import { matchFieldsValidator } from '../../../../shared/utils/validators.utils';
+import { AuthForms } from '../../forms/auth-forms.service';
+import { StorageService } from './../../../../core/services/storage.service';
+import { formatPhoneNumber } from '../../../../shared/utils/phone.utils';
+import { Store } from '@ngrx/store';
+import { selectLoadingKey } from '../../../../core/store/ui/ui.reducer';
+import { buttonRegisterLoading } from '../../../../core/store/ui/ui.constant';
+import { AuthPageActions } from '../../store/auth.actions';
 
 @Component({
   selector: 'app-register',
@@ -25,57 +28,22 @@ import { matchFieldsValidator } from '../../../../shared/utils/validators.utils'
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
-export class RegisterComponent implements OnInit {
-  registerForm!: FormGroup;
-  private readonly _fb = inject(FormBuilder);
-  private readonly _router = inject(Router);
-  ngOnInit(): void {
-    this.registerForm = this._fb.group(
-      {
-        username: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(8)]],
-        firstName: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(8)]],
-        lastName: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(8)]],
-        email: [null, [Validators.required, Validators.email]],
-        password: [
-          null,
-          [
-            Validators.required,
-            Validators.pattern(/^(?=\S+$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/),
-          ],
-        ],
-        rePassword: [null, [Validators.required]],
-        phone: [null, [Validators.required]],
-      },
-      {
-        validators: matchFieldsValidator('password', 'rePassword'),
-      }
-    );
-  }
-  get username() {
-    return this.registerForm.get('username') as FormControl;
-  }
-  get firstName() {
-    return this.registerForm.get('firstName') as FormControl;
-  }
-  get lastName() {
-    return this.registerForm.get('lastName') as FormControl;
-  }
-  get email() {
-    return this.registerForm.get('email') as FormControl;
-  }
-  get password() {
-    return this.registerForm.get('password') as FormControl;
-  }
-  get rePassword() {
-    return this.registerForm.get('rePassword') as FormControl;
-  }
-  get phone() {
-    return this.registerForm.get('phone') as FormControl;
+export class RegisterComponent {
+  private readonly authforms = inject(AuthForms);
+  registerForm = this.authforms.initRegisterForm();
+  private readonly store = inject(Store);
+  loading = this.store.selectSignal(selectLoadingKey(buttonRegisterLoading));
+  get controls(): Record<keyof RegisterRequest, FormControl<string>> {
+    return this.registerForm.controls;
   }
 
   register() {
-    this.registerForm.valid
-      ? console.log(this.registerForm.value)
-      : this.registerForm.markAllAsTouched();
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
+    }
+    const cleanPhone = formatPhoneNumber(this.controls.phone.value);
+    this.registerForm.patchValue({ phone: cleanPhone });
+    this.store.dispatch(AuthPageActions.registerSubmitted(this.registerForm.getRawValue()));
   }
 }

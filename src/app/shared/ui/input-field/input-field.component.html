@@ -1,7 +1,18 @@
 <div class="flex flex-col gap-2 w-full">
-  @if (label()) {
+  @if (label() && type()!='otp') {
   <label [for]="id()" class="text-[16px] font-medium text-base">{{ label() }}</label>
-  } @if (type() === 'password') {
+  }@if (type()==='otp') {
+  <div class="flex justify-center items-center py-2">
+    <ng-otp-input
+      [formControl]="control"
+      [config]="{
+        length: 6,
+        allowNumbersOnly: true,
+        inputClass: 'otp-field'
+      }"
+    ></ng-otp-input>
+  </div>
+  } @else if (type() === 'password') {
   <p-password
     [formControl]="control"
     [placeholder]="placeholder()"
@@ -39,11 +50,6 @@
     [ngClass]="{ 'border-danger': hasError }"
   />
   } @if (hasError) {
-  <app-form-error
-    [controller]="control"
-    [label]="label()"
-    [otp]="otp()"
-    [type]="type()"
-  ></app-form-error>
+  <app-form-error [controller]="control" [label]="label()" [type]="type()"></app-form-error>
   }
 </div>

@@ -1,14 +1,18 @@
-import { Component, inject, output } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { Actions, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { interval, takeWhile, tap } from 'rxjs';
+import { PlatformService } from '../../../../../../core/services/platform.service';
+import { buttonVerifyLoading } from '../../../../../../core/store/ui/ui.constant';
+import { selectLoadingKey } from '../../../../../../core/store/ui/ui.reducer';
 import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
 import { InputFieldComponent } from '../../../../../../shared/ui/input-field/input-field.component';
+import { AuthApiActions, AuthPageActions } from '../../../../store/auth.actions';
+import { selectForgetFlowEmail } from '../../../../store/auth.reducer';
+import { AuthForms } from './../../../../forms/auth-forms.service';
 
 @Component({
   selector: 'app-verify-code',
@@ -17,39 +21,53 @@ import { InputFieldComponent } from '../../../../../../shared/ui/input-field/inp
   styleUrl: './verify-code.component.css',
 })
 export class VerifyCodeComponent {
-  private readonly _fb = inject(FormBuilder);
-  step = output<number>();
-  resetForm!: FormGroup;
-
-  ngOnInit(): void {
-    this.resetForm = this._fb.group({
-      code1: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]?$')]],
-      code2: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]?$')]],
-      code3: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]?$')]],
-      code4: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]?$')]],
-      code5: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]?$')]],
-      code6: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9]?$')]],
-    });
+  private readonly authForms = inject(AuthForms);
+  private readonly store = inject(Store);
+  loading = this.store.selectSignal(selectLoadingKey(buttonVerifyLoading));
+  timer = signal<number>(60);
+  private platform = inject(PlatformService);
+  private destroy = inject(DestroyRef);
+  email = this.store.selectSignal(selectForgetFlowEmail);
+  otpFrom = this.authForms.initVerifyCoderForm();
+  private actions$ = inject(Actions);
+  startDownTimer() {
+    if (!this.platform.isBrowser()) return;
+    this.timer.set(60);
+    interval(1000)
+      .pipe(
+        takeWhile(() => this.timer() > 0),
+        tap(() => this.timer.update((val) => val - 1)),
+        takeUntilDestroyed(this.destroy)
+      )
+      .subscribe();
+  }
+  constructor() {
+    this.actions$
+      .pipe(ofType(AuthApiActions.forgetPasswordSuccess), takeUntilDestroyed(this.destroy))
+      .subscribe(() => {
+        console.log('Forget Password Success Action Received - Starting Timer');
+        this.startDownTimer();
+      });
+  }
+  ngAfterViewInit(): void {
+    this.startDownTimer();
   }
 
-  get codeControls() {
-    return [
-      this.resetForm.get('code1') as FormControl,
-      this.resetForm.get('code2') as FormControl,
-      this.resetForm.get('code3') as FormControl,
-      this.resetForm.get('code4') as FormControl,
-      this.resetForm.get('code5') as FormControl,
-      this.resetForm.get('code6') as FormControl,
-    ];
+  get controls() {
+    return this.otpFrom.controls;
   }
 
   verifyCode() {
-    if (this.resetForm.valid) {
-      const code = Object.values(this.resetForm.value).join('');
-      console.log('Full OTP:', code);
-      this.step.emit(3);
-    } else {
-      this.resetForm.markAllAsTouched();
+    if (this.otpFrom.invalid) {
+      this.otpFrom.markAllAsTouched();
+      return;
     }
+    this.store.dispatch(AuthPageActions.verifyResetCodeSubmitted(this.otpFrom.getRawValue()));
+  }
+  changeSteps(step: number) {
+    this.store.dispatch(AuthPageActions.changeStepsSubmitted({ step }));
+  }
+  requestCode() {
+    this.store.dispatch(AuthPageActions.forgetPasswordSubmitted({ email: this.email()! }));
   }
 }

@@ -1,8 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { selectForgetFlowSteps } from '../../store/auth.reducer';
 import { ForgetComponent } from './components/forget/forget.component';
 import { VerifyCodeComponent } from './components/verify-code/verify-code.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 @Component({
   selector: 'app-forget-password',
@@ -11,9 +13,7 @@ import { VerifyCodeComponent } from './components/verify-code/verify-code.compon
   styleUrl: './forget-password.component.css',
 })
 export class ForgetPasswordComponent implements OnInit {
-  steps = signal<number>(1);
+  private store = inject(Store);
+  steps = this.store.selectSignal(selectForgetFlowSteps);
   ngOnInit(): void {}
-  onStepChange(newStep: number) {
-    this.steps.set(newStep);
-  }
 }
