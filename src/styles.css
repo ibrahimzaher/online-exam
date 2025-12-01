@@ -230,3 +230,22 @@ ngx-intl-tel-input.ng-invalid.ng-touched input {
 .ng-invalid.ng-touched .otp-field {
   @apply outline-danger;
 }
+.active a {
+  @apply bg-primary-100 text-primary border;
+}
+.dots .p-button {
+  background: none;
+  width: fit-content;
+  border: none;
+  outline: none;
+  @apply text-color border-none;
+}
+.p-menu-submenu-label {
+  padding: 0;
+}
+.drawer-btn .p-button {
+  border: none;
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 10px;
+}

@@ -66,7 +66,7 @@ export class AuthEffects {
           this.storageService.setItem('token', token);
           this.storageService.setItem('user', user);
           this.toasterService.show(message);
-          this.router.navigateByUrl('/dash');
+          this.router.navigateByUrl('/diploma');
         })
       ),
     {
@@ -114,7 +114,7 @@ export class AuthEffects {
           this.storageService.setItem('token', token);
           this.storageService.setItem('user', user);
           this.toasterService.show(message);
-          this.router.navigateByUrl('/dash');
+          this.router.navigateByUrl('/diploma');
         })
       ),
     {
