@@ -6,3 +6,6 @@ export const buttonRegisterLoading = 'register button';
 export const buttonResetLoading = 'reset button';
 export const buttonVerifyLoading = 'verify button';
 export const buttonForgetLoading = 'Forget button';
+export const changePasswordLoading = 'changePassword button';
+export const editProfileLoading = 'editProfile button';
+export const deleteAccountLoading = 'deleteAccount button';

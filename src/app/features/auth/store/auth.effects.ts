@@ -2,6 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import {
+  ChangePasswordUsecaseService,
+  DeleteMeUsecaseService,
+  EditProfileUsecaseService,
   ForgetPasswordUsecaseService,
   LoginUsecaseService,
   LogoutUsecaseService,
@@ -12,7 +15,7 @@ import {
 import { StorageService } from '../../../core/services/storage.service';
 import { ToasterService } from '../../../core/services/toaster.service';
 import { AuthApiActions, AuthPageActions } from './auth.actions';
-import { catchError, exhaustMap, finalize, map, of, tap } from 'rxjs';
+import { catchError, exhaustMap, finalize, map, of, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { UiActions } from '../../../core/store/ui/ui.actions';
@@ -23,6 +26,9 @@ import {
   buttonRegisterLoading,
   buttonResetLoading,
   buttonVerifyLoading,
+  changePasswordLoading,
+  deleteAccountLoading,
+  editProfileLoading,
 } from '../../../core/store/ui/ui.constant';
 import { uiFeature } from '../../../core/store/ui/ui.reducer';
 
@@ -35,6 +41,9 @@ export class AuthEffects {
   private readonly verifyResetCodeUsecaseService = inject(VerifyResetCodeUsecaseService);
   private readonly resetPasswordUsecaseService = inject(ResetPasswordUsecaseService);
   private readonly logoutUsecaseService = inject(LogoutUsecaseService);
+  private readonly changePasswordUsecaseService = inject(ChangePasswordUsecaseService);
+  private readonly editProfileUsecaseService = inject(EditProfileUsecaseService);
+  private readonly deleteAccountUsecaseService = inject(DeleteMeUsecaseService);
   private readonly storageService = inject(StorageService);
   private readonly toasterService = inject(ToasterService);
   private readonly router = inject(Router);
@@ -271,6 +280,105 @@ export class AuthEffects {
           setTimeout(() => {
             this.toasterService.show(`Welcome back, ${user.username}!`);
           }, 0);
+        })
+      ),
+    {
+      dispatch: false,
+    }
+  );
+  changePassword$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthPageActions.changePasswordSubmitted),
+      tap(() => this.store.dispatch(UiActions.startLoading({ key: changePasswordLoading }))),
+      exhaustMap(({ oldPassword, password, rePassword }) =>
+        this.changePasswordUsecaseService.execute({ oldPassword, password, rePassword }).pipe(
+          map(({ message, token }) => AuthApiActions.changePasswordSuccess({ message, token })),
+          catchError((err: any) =>
+            of(
+              AuthApiActions.changePasswordFailure({
+                message: err?.message ?? 'An unexpected error occurred',
+              })
+            )
+          ),
+          finalize(() => this.store.dispatch(UiActions.stopLoading({ key: changePasswordLoading })))
+        )
+      )
+    )
+  );
+  changePasswordSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthApiActions.changePasswordSuccess),
+        tap(({ message, token }) => {
+          this.storageService.setItem('token', token);
+          this.toasterService.show(message);
+        })
+      ),
+    {
+      dispatch: false,
+    }
+  );
+  editProfile$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthPageActions.editProfileSubmitted),
+      tap(() => this.store.dispatch(UiActions.startLoading({ key: editProfileLoading }))),
+      exhaustMap(({ email, firstName, lastName, phone, username }) =>
+        this.editProfileUsecaseService
+          .execute({ email, firstName, lastName, phone, username })
+          .pipe(
+            map(({ message, user }) => AuthApiActions.editProfileSuccess({ message, user })),
+            catchError((err: any) =>
+              of(
+                AuthApiActions.editProfileFailure({
+                  message: err?.message ?? 'An unexpected error occurred',
+                })
+              )
+            ),
+            finalize(() => this.store.dispatch(UiActions.stopLoading({ key: editProfileLoading })))
+          )
+      )
+    )
+  );
+  editProfileSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthApiActions.editProfileSuccess),
+        tap(({ message, user }) => {
+          this.storageService.setItem('user', user);
+          this.toasterService.show(message);
+        })
+      ),
+    {
+      dispatch: false,
+    }
+  );
+  deleteAccount$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthPageActions.deleteAccountSubmitted),
+      tap(() => this.store.dispatch(UiActions.startLoading({ key: deleteAccountLoading }))),
+      exhaustMap(() =>
+        this.deleteAccountUsecaseService.execute().pipe(
+          map(({ message }) => AuthApiActions.deleteAccountSuccess({ message })),
+          catchError((err: any) =>
+            of(
+              AuthApiActions.deleteAccountFailure({
+                message: err?.message ?? 'An unexpected error occurred',
+              })
+            )
+          ),
+          finalize(() => this.store.dispatch(UiActions.stopLoading({ key: deleteAccountLoading })))
+        )
+      )
+    )
+  );
+  deleteAccountSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthApiActions.deleteAccountSuccess),
+        tap(({ message }) => {
+          this.storageService.clear();
+          this.toasterService.show(message);
+          this.router.navigateByUrl('/login', { replaceUrl: true });
         })
       ),
     {

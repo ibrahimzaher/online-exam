@@ -17,6 +17,7 @@ import {
   AuthModel,
   MessageModel,
   PasswordModel,
+  ProfileModel,
   StatusModel,
   UserModel,
 } from '../../domain/models/auth.model';
@@ -49,7 +50,7 @@ export class AuthApiRepo implements AuthRepo {
       .profileData()
       .pipe(map((data) => this._authAdaptor.adaptProfileData(data)));
   }
-  editProfile(data: EditProfileReq): Observable<MessageModel> {
+  editProfile(data: EditProfileReq): Observable<ProfileModel> {
     return this._authService
       .editProfile(data)
       .pipe(map((data) => this._authAdaptor.adaptEditProfile(data)));

@@ -1,4 +1,4 @@
-<main class="min-h-screen flex">
+<main class="min-h-screen flex bg-gray-50">
   <aside class="md:block hidden">
     <app-sidebar></app-sidebar>
   </aside>
@@ -6,7 +6,8 @@
     <ng-template #headless> <app-sidebar></app-sidebar> </ng-template>
   </p-drawer>
   <p-button (click)="visible = true" icon="pi pi-bars" class="md:hidden drawer-btn" />
-  <main class="mt-2">
+  <main class="w-full">
+    <app-top-bar></app-top-bar>
     <router-outlet></router-outlet>
   </main>
 </main>

@@ -1,0 +1,58 @@
+<form
+  [formGroup]="profileForm"
+  class="flex justify-center bg-white items-start flex-col p-5 w-full"
+>
+  <div class="flex flex-col gap-4 w-full">
+    <div class="flex gap-2.5">
+      <app-input-field
+        [controller]="controls.firstName"
+        [id]="'firstName'"
+        [label]="'First Name'"
+        placeholder="Ahmed"
+        class="w-full"
+      ></app-input-field>
+      <app-input-field
+        [controller]="controls.lastName"
+        [id]="'lastName'"
+        [label]="'Last Name'"
+        placeholder="Abdallah"
+        class="w-full"
+      ></app-input-field>
+    </div>
+    <app-input-field
+      [controller]="controls.username"
+      [id]="'username'"
+      [label]="'User Name'"
+      placeholder="user123"
+    ></app-input-field>
+    <app-input-field
+      [controller]="controls.email"
+      [id]="'email'"
+      [label]="'Email'"
+      placeholder="user@example.com"
+      type="email"
+    ></app-input-field>
+    <app-input-field
+      [controller]="controls.phone"
+      [id]="'phone'"
+      [label]="'Phone'"
+      type="tel"
+    ></app-input-field>
+
+    <div class="flex flex-col lg:flex-row justify-between gap-5">
+      <app-button
+        class="w-full"
+        (click)="confirm($event)"
+        [label]="'Delete My Account'"
+        typeButton="alert"
+      ></app-button>
+      <app-button
+        (click)="editProfile()"
+        class="w-full"
+        [loading]="loadingEdit()"
+        [label]="'Save Changes'"
+      ></app-button>
+    </div>
+  </div>
+</form>
+<p-confirmdialog />
