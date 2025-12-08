@@ -24,7 +24,7 @@ export abstract class AuthRepo {
   abstract deleteMe(): Observable<MessageModel>;
   abstract logout(): Observable<MessageModel>;
   abstract profileData(): Observable<ProfileModel>;
-  abstract editProfile(data: EditProfileReq): Observable<MessageModel>;
+  abstract editProfile(data: EditProfileReq): Observable<ProfileModel>;
   abstract forgetPassword(data: ForgetPasswordReq): Observable<MessageModel>;
   abstract verifyResetCode(data: VerifyResetCodeReq): Observable<StatusModel>;
   abstract resetPassword(data: ResetPasswordReq): Observable<PasswordModel>;

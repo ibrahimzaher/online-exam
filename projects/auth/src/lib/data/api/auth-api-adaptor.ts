@@ -40,9 +40,10 @@ export class AuthApiAdaptor implements AuthAdaptor {
       user: this.adaptUser(data.user),
     };
   }
-  adaptEditProfile(data: EditProfileRes): MessageModel {
+  adaptEditProfile(data: EditProfileRes): ProfileModel {
     return {
       message: data.message,
+      user: this.adaptUser(data.user),
     };
   }
   adaptForgetPassword(data: ForgetPasswordRes): MessageModel {

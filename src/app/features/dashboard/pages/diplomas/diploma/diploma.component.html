@@ -1,0 +1,8 @@
+<div (click)="navigateTo()" class="relative group w-full transition cursor-pointer">
+  <img class="group-hover:scale-102 transition block w-full h-[300px]" [src]="subject().icon" />
+  <h2
+    class="bg-primary-500/50 text-center p-5 text-white w-[80%] mx-auto absolute bottom-4 start-[10%]"
+  >
+    {{ subject().name }}
+  </h2>
+</div>

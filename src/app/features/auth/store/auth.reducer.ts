@@ -66,12 +66,29 @@ export const authReducer = createReducer(
       },
     };
   }),
-
+  on(AuthApiActions.changePasswordSuccess, (state, { token }) => {
+    return {
+      ...state,
+      token,
+    };
+  }),
+  on(AuthApiActions.editProfileSuccess, (state, { user }) => {
+    return {
+      ...state,
+      user,
+    };
+  }),
   on(AuthApiActions.rehydrate, (state, { user, token }) => ({
     ...state,
     user,
     token,
-  }))
+  })),
+  on(AuthPageActions.deleteAccountSubmitted, (state) => {
+    return {
+      ...state,
+      initialAuthState,
+    };
+  })
 );
 
 export const authFeature = createFeature({

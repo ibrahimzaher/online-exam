@@ -1,9 +1,14 @@
+import { inject } from '@angular/core';
 import {
   AuthModel,
+  ChangePasswordReq,
+  EditProfileReq,
   ForgetPasswordReq,
   LoginRequest,
+  LogoutUsecaseService,
   MessageModel,
   PasswordModel,
+  ProfileModel,
   RegisterRequest,
   ResetPasswordReq,
   StatusModel,
@@ -25,6 +30,9 @@ export const AuthPageActions = createActionGroup({
     verifyResetCodeSubmitted: props<VerifyResetCodeReq>(),
     resetPasswordSubmitted: props<ResetPasswordReq>(),
     changeStepsSubmitted: props<{ step: number }>(),
+    editProfileSubmitted: props<EditProfileReq>(),
+    changePasswordSubmitted: props<ChangePasswordReq>(),
+    deleteAccountSubmitted: emptyProps(),
   },
 });
 export const AuthApiActions = createActionGroup({
@@ -42,6 +50,12 @@ export const AuthApiActions = createActionGroup({
     verifyResetCodeFailure: props<MessageModel>(),
     resetPasswordSuccess: props<PasswordModel>(),
     resetPasswordFailure: props<MessageModel>(),
+    editProfileSuccess: props<ProfileModel>(),
+    editProfileFailure: props<MessageModel>(),
+    changePasswordSuccess: props<PasswordModel>(),
+    changePasswordFailure: props<MessageModel>(),
+    deleteAccountSuccess: props<MessageModel>(),
+    deleteAccountFailure: props<MessageModel>(),
     rehydrate: props<rehydrateModel>(),
   },
 });

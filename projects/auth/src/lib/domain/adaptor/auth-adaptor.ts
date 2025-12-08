@@ -11,6 +11,6 @@ export interface AuthAdaptor {
   adaptLogin(data: LoginRes): AuthModel;
   adaptRegister(data: RegisterRes): AuthModel;
   adaptProfileData(data: ProfileDataRes): ProfileModel;
-  adaptEditProfile(data: EditProfileRes): MessageModel;
+  adaptEditProfile(data: EditProfileRes): ProfileModel;
   adaptForgetPassword(data: ForgetPasswordRes): MessageModel;
 }
