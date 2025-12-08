@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { ProfileComponent } from './profile/profile.component';
-import { ChangePasswordComponent } from './change-password/change-password.component';
 
 export const ACCOUNT_ROUTES: Routes = [
   {
@@ -10,10 +8,17 @@ export const ACCOUNT_ROUTES: Routes = [
   },
   {
     path: 'profile',
-    component: ProfileComponent,
+    loadComponent: () => import('./profile/profile.component').then((c) => c.ProfileComponent),
+    data: {
+      breadcrumb: 'Account',
+    },
   },
   {
     path: 'change-password',
-    component: ChangePasswordComponent,
+    loadComponent: () =>
+      import('./change-password/change-password.component').then((c) => c.ChangePasswordComponent),
+    data: {
+      breadcrumb: 'Account',
+    },
   },
 ];

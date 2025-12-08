@@ -1,14 +1,10 @@
-<section class="px-5">
-  <div class="flex items-center gap-2 my-5">
-    <span
-      [routerLink]="['../']"
-      class="pi cursor-pointer pi-arrow-circle-left md:text-3xl py-5 px-2 border border-primary text-primary h-full w-fit"
-    ></span>
-    <div class="bg-primary w-full flex items-center text-white p-5 font-semibold md:text-3xl">
-      <span class="pi pi-user md:text-3xl me-4"></span>
-      <h2>Account Settings</h2>
-    </div>
-  </div>
+<section class="pe-5 sm:ps-5">
+  <app-header
+    [icon]="'pi pi-user'"
+    [isBack]="true"
+    [navigateUrl]="'/account'"
+    title="Account Settings"
+  ></app-header>
   <div class="grid grid-cols-12 gap-4">
     <div class="col-span-12 lg:col-span-4 flex flex-col p-5 gap-5 justify-between bg-white h-full">
       <ul class="list-none">

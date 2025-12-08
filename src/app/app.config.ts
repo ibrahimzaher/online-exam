@@ -28,6 +28,9 @@ import { AuthApiActions } from './features/auth/store/auth.actions';
 import { StorageService } from './core/services/storage.service';
 import { UiEffects } from './core/store/ui/ui.effects';
 import { AuthEffects } from './features/auth/store/auth.effects';
+import { DASHBOARD_PROVIDER } from './features/dashboard/di/dashboard-di';
+import { dashboardFeature } from './features/dashboard/store/dashboard/dashboard.reducer';
+import { DashboardEffects } from './features/dashboard/store/dashboard/dashboard.effects';
 export function rehydrate() {
   const store = inject(Store);
   const storage = inject(StorageService);
@@ -58,6 +61,7 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     ...AUTH_PROVIDERS,
     { provide: API_CONFIG, useValue: { baseUrl: environment.baseUrl } },
+    ...DASHBOARD_PROVIDER,
     providePrimeNG({
       theme: {
         preset: Aura,
@@ -70,8 +74,12 @@ export const appConfig: ApplicationConfig = {
         },
       },
     }),
-    provideStore({ [uiFeatureKey]: uiReducer, [authFeature.name]: authFeature.reducer }),
-    provideEffects(UiEffects, AuthEffects),
+    provideStore({
+      [uiFeatureKey]: uiReducer,
+      [authFeature.name]: authFeature.reducer,
+      [dashboardFeature.name]: dashboardFeature.reducer,
+    }),
+    provideEffects(UiEffects, AuthEffects, DashboardEffects),
     provideAppInitializer(rehydrate),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
   ],

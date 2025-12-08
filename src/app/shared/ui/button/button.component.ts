@@ -13,7 +13,7 @@ export class ButtonComponent {
   icon = input<string>();
   loading = input<boolean>(false);
   typeButton = input<ButtonType>('primary');
-
+  disabled = input<boolean>(false);
   get classes() {
     return {
       'btn-primary': this.typeButton() === 'primary',

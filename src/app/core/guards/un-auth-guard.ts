@@ -11,7 +11,7 @@ export const unAuthGuard: CanActivateFn = (route, state) => {
   const isLogin = store.selectSignal(selectIsLogin);
 
   if (isLogin()) {
-    return _router.parseUrl('/dash');
+    return _router.parseUrl('/diploma');
   }
   return true;
 };

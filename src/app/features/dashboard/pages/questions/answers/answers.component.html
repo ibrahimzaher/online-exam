@@ -1,0 +1,52 @@
+<div class="h-full font-bold mb-5 text-lg grid grid-cols-4">
+  <h2 class="text-primary col-span-4">Results:</h2>
+  <div class="col-span-4 md:col-span-2 xl:col-span-1 py-10">
+    <div
+      class="w-40 h-40 rounded-full relative mx-auto flex items-center justify-center"
+      [style.background]="
+        'conic-gradient(var(--color-success) 0% ' +
+        percentage() +
+        '%, var(--color-danger) ' +
+        percentage() +
+        '% 100%)'
+      "
+    >
+      <div class="absolute inset-6 bg-white rounded-full"></div>
+    </div>
+    <div class="flex items-center gap-5 justify-center py-5">
+      <span class="w-5 h-5 bg-success"></span>
+      <span class="text-lg font-semibold text-gray-500 text-center">Correct: {{ score() }}</span>
+    </div>
+    <div class="flex items-center gap-5 justify-center py-2">
+      <span class="w-5 h-5 bg-danger"></span>
+      <span class="text-lg font-semibold text-gray-500 text-center"
+        >InCorrect: {{ questions().length - score() }}</span
+      >
+    </div>
+  </div>
+  <div
+    class="col-span-4 md:col-span-2 xl:col-span-3 p-5 md:h-[400px] overflow-y-scroll overflow-x-hidden"
+  >
+    @for (question of questions(); track $index){
+    <span class="w-full block text-primary text-xl">{{ question.question }}</span>
+    <div class="bg-success-100 flex gap-4 my-2 p-4 font-normal">
+      <span
+        class="w-7 h-7 block outline-1 outline-gray-300 border-2 border-gray-200 rounded-full bg-success"
+      ></span>
+      <span class="w-full text-gray-700">
+        {{ getAnswerText(question, question.correct) }}
+      </span>
+    </div>
+    @if (answers() && answers()[question._id]!==question.correct) {
+
+    <div class="bg-danger-100 flex gap-4 my-2 p-4 font-normal">
+      <span
+        class="w-7 h-7 block outline-1 outline-gray-300 border-2 border-gray-200 rounded-full bg-danger"
+      ></span>
+      <span class="w-full text-gray-700">
+        {{ getAnswerText(question, answers()[question._id]) }}</span
+      >
+    </div>
+    } }
+  </div>
+</div>

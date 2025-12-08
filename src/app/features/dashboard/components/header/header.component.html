@@ -1,0 +1,12 @@
+<div class="flex items-center h-[70px] gap-2 my-5">
+  @if (isBack()) {
+  <span
+    [routerLink]="[`${navigateUrl()}`]"
+    class="pi cursor-pointer pi-arrow-circle-left md:text-3xl py-5 px-2 border border-primary flex content-center text-primary h-full w-fit"
+  ></span>
+  }
+  <div class="bg-primary w-full flex items-center text-white p-5 h-full font-semibold md:text-3xl">
+    <span class="{{ icon() }} md:text-3xl me-4"></span>
+    <h2>{{ title() }}</h2>
+  </div>
+</div>

@@ -9,3 +9,6 @@ export const buttonForgetLoading = 'Forget button';
 export const changePasswordLoading = 'changePassword button';
 export const editProfileLoading = 'editProfile button';
 export const deleteAccountLoading = 'deleteAccount button';
+export const loadDiplomasLoading = 'loadDiplomas button';
+export const loadExamsLoading = 'loadExams button';
+export const loadQuestionsLoading = 'loadQuestions button';

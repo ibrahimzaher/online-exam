@@ -1,17 +1,13 @@
-import { Component, inject, ViewChild } from '@angular/core';
-import { DrawerModule } from 'primeng/drawer';
-import { ButtonModule, Button } from 'primeng/button';
-import { Ripple } from 'primeng/ripple';
-import { AvatarModule, Avatar } from 'primeng/avatar';
-import { StyleClass } from 'primeng/styleclass';
-import { Drawer } from 'primeng/drawer';
-import { RouterOutlet, RouterLinkWithHref, RouterLinkActive, RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
+import { Avatar } from 'primeng/avatar';
+import { Button } from 'primeng/button';
 import { Menu } from 'primeng/menu';
+import { AuthPageActions } from '../../../../features/auth/store/auth.actions';
 import { selectUser } from '../../../../features/auth/store/auth.reducer';
 import { LogoComponent } from '../../../../shared/ui/logo/logo.component';
-import { AuthPageActions } from '../../../../features/auth/store/auth.actions';
 @Component({
   selector: 'app-sidebar',
   imports: [RouterLink, RouterLinkActive, Avatar, Menu, Button, LogoComponent],

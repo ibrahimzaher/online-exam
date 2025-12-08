@@ -1,19 +1,14 @@
-import { AuthPageActions } from './../../../../store/auth.actions';
-import { Component, DestroyRef, inject, input, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { ResetPasswordUsecaseService } from '@izaher-dev/auth';
-import { finalize, tap } from 'rxjs';
-import { ToasterService } from '../../../../../../core/services/toaster.service';
+import { RouterLink } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { buttonResetLoading } from '../../../../../../core/store/ui/ui.constant';
+import { selectLoadingKey } from '../../../../../../core/store/ui/ui.reducer';
 import { ButtonComponent } from '../../../../../../shared/ui/button/button.component';
 import { InputFieldComponent } from '../../../../../../shared/ui/input-field/input-field.component';
 import { AuthForms } from '../../../../forms/auth-forms.service';
-import { StorageService } from './../../../../../../core/services/storage.service';
-import { Store } from '@ngrx/store';
-import { selectLoadingKey } from '../../../../../../core/store/ui/ui.reducer';
-import { buttonResetLoading } from '../../../../../../core/store/ui/ui.constant';
 import { selectForgetFlowEmail } from '../../../../store/auth.reducer';
+import { AuthPageActions } from './../../../../store/auth.actions';
 
 @Component({
   selector: 'app-reset-password',
