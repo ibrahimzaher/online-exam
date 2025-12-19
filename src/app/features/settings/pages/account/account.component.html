@@ -8,24 +8,17 @@
   <div class="grid grid-cols-12 gap-4">
     <div class="col-span-12 lg:col-span-4 flex flex-col p-5 gap-5 justify-between bg-white h-full">
       <ul class="list-none">
-        <li [routerLink]="['profile']" [routerLinkActive]="['active']">
+        @for (item of linkItems(); track $index) {
+        <li [routerLink]="[item.route]" [routerLinkActive]="['active']">
           <a
             pRipple
             class="flex items-center text-gray-500 cursor-pointer p-4 text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
           >
-            <i class="pi pi-user mr-2"></i>
-            <span class="font-medium">Profile</span>
+            <i [class]="item.icon" class="mr-2"></i>
+            <span class="font-medium">{{ item.label }}</span>
           </a>
         </li>
-        <li [routerLink]="['change-password']" [routerLinkActive]="['active']">
-          <a
-            pRipple
-            class="flex items-center text-gray-500 cursor-pointer p-4 text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
-          >
-            <i class="pi pi-lock mr-2"></i>
-            <span class="font-medium">Change Password</span>
-          </a>
-        </li>
+        }
       </ul>
       <app-button
         [icon]="'pi pi-sign-out'"

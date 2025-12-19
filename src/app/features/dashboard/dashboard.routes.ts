@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AccountComponent } from '../settings/pages/account/account.component';
 
 export const DASHBOARD_ROUTES: Routes = [
   {
@@ -24,7 +25,9 @@ export const DASHBOARD_ROUTES: Routes = [
   {
     path: 'questions/:examId',
     loadComponent: () =>
-      import('./pages/questions/questions.component').then((c) => c.QuestionsComponent),
+      import('../dashboard/pages/exams/questions/questions.component').then(
+        (c) => c.QuestionsComponent
+      ),
 
     data: {
       breadcrumb: 'Questions',
@@ -33,9 +36,8 @@ export const DASHBOARD_ROUTES: Routes = [
 
   {
     path: 'account',
-    loadComponent: () =>
-      import('./pages/account/account.component').then((c) => c.AccountComponent),
-
-    loadChildren: () => import('./pages/account/account.routes').then((m) => m.ACCOUNT_ROUTES),
+    component: AccountComponent,
+    loadChildren: () =>
+      import('../settings/pages/account/account.routes').then((m) => m.ACCOUNT_ROUTES),
   },
 ];

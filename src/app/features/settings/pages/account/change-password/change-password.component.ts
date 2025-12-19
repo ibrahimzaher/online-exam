@@ -1,8 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { ChangePasswordReq, EditProfileReq } from '@izaher-dev/auth';
+import { ChangePasswordReq } from '@izaher-dev/auth';
 import { Store } from '@ngrx/store';
-import { selectUser } from '../../../../auth/store/auth.reducer';
 import { AccountFormsService } from '../forms/account-forms.service';
 import { InputFieldComponent } from '../../../../../shared/ui/input-field/input-field.component';
 import { ButtonComponent } from '../../../../../shared/ui/button/button.component';

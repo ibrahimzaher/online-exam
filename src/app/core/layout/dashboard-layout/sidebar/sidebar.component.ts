@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
@@ -19,6 +19,10 @@ export class SidebarComponent {
   user = this.store.selectSignal(selectUser);
 
   items: MenuItem[] | undefined;
+  sidebarLinkedItems = signal([
+    { label: 'Diploma', icon: 'pi pi-graduation-cap', route: 'diploma' },
+    { label: 'Account Settings', icon: 'pi pi-user', route: 'account' },
+  ]);
   logout() {
     this.store.dispatch(AuthPageActions.logoutSubmitted());
   }

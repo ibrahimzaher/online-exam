@@ -1,37 +1,39 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { loadQuestionsLoading } from '../../../../core/store/ui/ui.constant';
-import { selectLoadingKey } from '../../../../core/store/ui/ui.reducer';
-import { HeaderComponent } from '../../components/header/header.component';
-import {
-  selectCurrentQuestionIndex,
-  selectQuestions,
-  selectCurrentQuestion,
-  selectCurrentAnswer,
-  selectAnswers,
-  selectScore,
-} from '../../store/dashboard/dashboard.reducer';
+
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { ProgressBar } from 'primeng/progressbar';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { map } from 'rxjs';
-import { ButtonComponent } from '../../../../shared/ui/button/button.component';
-import { EmptyListComponent } from '../../components/empty-list/empty-list.component';
-import { DashboardPageActions } from '../../store/dashboard/dashboard.actions';
+
 import { CommonModule } from '@angular/common';
 import { AnswersComponent } from './answers/answers.component';
+import { loadQuestionsLoading } from '../../../../../core/store/ui/ui.constant';
+import { selectLoadingKey } from '../../../../../core/store/ui/ui.reducer';
+import { DashboardPageActions } from '../../../store/dashboard/dashboard.actions';
+import {
+  selectQuestions,
+  selectCurrentQuestionIndex,
+  selectCurrentQuestion,
+  selectCurrentAnswer,
+  selectAnswers,
+  selectScore,
+} from '../../../store/dashboard/dashboard.reducer';
+import { HeaderComponent } from '../../../components/header/header.component';
+import { EmptyListComponent } from '../../../components/empty-list/empty-list.component';
+import { ButtonComponent } from '../../../../../shared/ui/button/button.component';
 
 @Component({
   selector: 'app-questions',
   imports: [
-    HeaderComponent,
     ProgressSpinner,
-    EmptyListComponent,
     ProgressBar,
-    ButtonComponent,
     CommonModule,
     AnswersComponent,
+    HeaderComponent,
+    EmptyListComponent,
+    ButtonComponent,
   ],
   templateUrl: './questions.component.html',
   styleUrls: ['./questions.component.css'],
