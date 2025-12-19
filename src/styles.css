@@ -74,6 +74,8 @@
 
   --p-success-color: var(--color-success);
   --p-danger-color: var(--color-danger);
+  --p-toast-width: fit-content;
+  --p-toast-border-radius: none;
 }
 
 @theme {
@@ -146,7 +148,22 @@ html,
 body {
   font-family: var(--font-base);
 }
+/* Toast */
+.p-toast-message {
+  background-color: var(--color-gray-500);
+  color: var(--color-white);
+  border: none;
+  padding-inline: 5px;
+}
 
+.p-icon {
+  background-color: white;
+  color: gray;
+  padding: 5px;
+  box-sizing: content-box;
+  border-radius: 50%;
+  font-weight: bold;
+}
 /* Input Tel */
 .iti {
   width: 100%;
@@ -188,34 +205,6 @@ ngx-intl-tel-input.ng-invalid.ng-touched input {
   border-color: var(--color-danger);
 }
 
-/* Toast */
-
-.custom-toast {
-  background-color: var(--color-gray-800);
-  color: white;
-  border: none;
-  border-radius: 0;
-  box-shadow: 0px 6px 13.1px 4px #0000001a;
-}
-
-.success .p-icon {
-  color: var(--color-success);
-}
-.error .p-icon {
-  color: var(--color-danger);
-}
-.p-toast-message-content {
-  display: flex;
-  padding: 16px;
-  align-items: center;
-  gap: 10px;
-}
-.p-toast-summary {
-  display: flex;
-  padding-top: 7px;
-  justify-items: center;
-  align-items: center;
-}
 .p-password-toggle-mask-icon {
   cursor: pointer;
 }
@@ -229,4 +218,69 @@ ngx-intl-tel-input.ng-invalid.ng-touched input {
 
 .ng-invalid.ng-touched .otp-field {
   @apply outline-danger;
+}
+.active a {
+  @apply bg-primary-100 text-primary border;
+}
+.dots .p-button {
+  background: none;
+  width: fit-content;
+  border: none;
+  outline: none;
+  @apply text-color border-none;
+}
+.p-menu-submenu-label {
+  padding: 0;
+}
+.drawer-btn .p-button {
+  border: none;
+  margin-top: 10px;
+  margin-left: 5px;
+}
+
+.p-breadcrumb-item-icon {
+  padding: 0;
+  width: 0;
+  height: 0;
+}
+
+.active-breadcrumb a {
+  @apply text-primary font-bold;
+}
+
+.breadcrumb-item a {
+  @apply text-gray-500;
+}
+.p-breadcrumb-separator::before {
+  content: '/';
+}
+.p-breadcrumb-separator svg {
+  display: none;
+}
+.btn-alert button {
+  @apply bg-danger-100 text-danger border-none hover:text-danger-700 hover:bg-danger-200;
+}
+input[type='radio'] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-gray-300);
+  background-color: white;
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+}
+
+input[type='radio']:checked::after {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background-color: var(--color-primary);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

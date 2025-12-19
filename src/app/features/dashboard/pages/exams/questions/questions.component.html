@@ -1,0 +1,88 @@
+<section class="flex flex-col pe-5 sm:ps-5">
+  <app-header
+    class="w-full"
+    navigateUrl="/exams/{{ examId() }}"
+    [isBack]="true"
+    [icon]="'pi pi-question-circle'"
+    title="{{ title() }} Questions"
+  ></app-header>
+  @if (loading()) {
+  <div class="card flex justify-center fixed top-[50%] start-[50%] -translate-[50%]">
+    <p-progress-spinner
+      strokeWidth="8"
+      fill="transparent"
+      animationDuration=".5s"
+      [style]="{ width: '50px', height: '50px' }"
+    ></p-progress-spinner>
+  </div>
+  } @if (questions().length===0 && !loading()) {
+  <app-empty-list title="questions"></app-empty-list>
+  }@else if (questions().length>0 && !loading()) {
+
+  <div class="p-5 flex flex-col gap-5 bg-white">
+    <div class="flex justify-between">
+      <span class="font-semibold text-gray-500">{{ currentQuestion().exam.title }}</span>
+      <span class="font-semibold text-gray-500">
+        Question <span class="text-primary">{{ currentIndex() + 1 }}</span> of
+        {{ questions().length }}
+      </span>
+    </div>
+
+    <p-progress-bar
+      [value]="((currentIndex() + 1) * 100) / questions().length"
+      class="rounded-none"
+    >
+      <ng-template #content let-value></ng-template>
+    </p-progress-bar>
+
+    @if(!showAnswer()){
+    <h2 class="text-primary font-semibold text-2xl my-3">
+      {{ currentQuestion().question }}
+    </h2>
+
+    <div class="flex flex-col gap-3">
+      @for (choice of currentQuestion().answers; track $index) {
+      <label
+        class="p-4 cursor-pointer flex items-center gap-3 bg-gray-50 hover:bg-gray-100"
+        [class.bg-gray-100]="currentAnswer() === choice.key"
+        (click)="saveAnswer(choice.key)"
+      >
+        <input type="radio" name="choice" [checked]="currentAnswer() === choice.key" />
+        <span>{{ choice.answer }}</span>
+      </label>
+      }
+    </div>
+    @if (error()) {
+    <p class="text-danger bg-danger-100 p-5 text-center text-sm">
+      {{ error() }}
+    </p>
+    }
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <app-button
+        (click)="pervious()"
+        [disabled]="currentIndex() == 0"
+        [icon]="'pi pi-arrow-left'"
+        [iconPos]="'left'"
+        [label]="'Previous Question'"
+      ></app-button>
+      <app-button
+        (click)="next()"
+        [icon]="'pi pi-arrow-right'"
+        [iconPos]="'right'"
+        [label]="'Next Question'"
+      ></app-button>
+    </div>
+    }@else {
+    <app-answers [questions]="questions()" [answers]="answers()" [score]="score()"></app-answers>
+    <app-button
+      class="px-5"
+      [icon]="'pi pi-refresh'"
+      [label]="'Restart'"
+      [iconPos]="'left'"
+      (click)="restart()"
+    ></app-button>
+    }
+  </div>
+  }
+</section>

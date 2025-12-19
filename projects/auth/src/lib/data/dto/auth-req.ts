@@ -18,12 +18,11 @@ export interface ChangePasswordReq {
   rePassword: string;
 }
 export interface EditProfileReq {
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  phone: string;
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
 }
 export interface ForgetPasswordReq {
   email: string;

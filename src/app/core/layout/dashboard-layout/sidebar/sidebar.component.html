@@ -1,0 +1,44 @@
+<div class="flex flex-col min-h-screen bg-primary-50">
+  <div class="flex flex-col pt-10 px-10">
+    <img src="assets/images/elevate.png" width="80%" class="invert" />
+    <app-logo></app-logo>
+  </div>
+  <div class="overflow-y-auto">
+    <ul class="list-none flex flex-col px-10 mt-5 overflow-hidden">
+      @for (item of sidebarLinkedItems(); track $index) {
+      <li [routerLink]="[item.route]" [routerLinkActive]="['active']">
+        <a
+          pRipple
+          class="flex items-center text-gray-500 cursor-pointer p-4 text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+        >
+          <i [class]="item.icon" class="mr-2"></i>
+          <span class="font-medium">{{ item.label }}</span>
+        </a>
+      </li>
+      }
+    </ul>
+  </div>
+  <div class="mt-auto">
+    <hr class="mb-4 mx-4 border-t border-0 border-surface" />
+    <a
+      pRipple
+      class="m-4 flex items-center cursor-pointer p-4 gap-2 rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"
+    >
+      <p-avatar
+        [label]="`${user()?.firstName?.charAt(0)}${user()?.lastName?.charAt(0)}`"
+        class="bg-primary-500 p-5 text-white"
+        shape="circle"
+      />
+
+      <div class="flex">
+        <span class="font-bold text-primary text-sm"
+          >{{ user()?.username }} {{ user()?.email }}</span
+        >
+        <div>
+          <p-menu #menu [model]="items" [popup]="true" appendTo="body" />
+          <p-button class="dots" (click)="menu.toggle($event)" icon="pi pi-ellipsis-v " />
+        </div>
+      </div>
+    </a>
+  </div>
+</div>

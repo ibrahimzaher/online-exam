@@ -1,4 +1,13 @@
-<p class="bg-success text-3xl text-center p-5">dashboard-layout works!</p>
-<div class="w-1/2 p-5">
-  <app-button label="logout" [loading]="loading()" (click)="logout()"></app-button>
-</div>
+<main class="min-h-screen flex bg-gray-50">
+  <aside class="w-80 h-screen overflow-y-auto fixed top-0 left-0 lg:block hidden">
+    <app-sidebar></app-sidebar>
+  </aside>
+  <p-drawer #drawerRef [(visible)]="visible" class="lg:hidden sm:block">
+    <ng-template #headless> <app-sidebar></app-sidebar> </ng-template>
+  </p-drawer>
+  <p-button (click)="visible = true" icon="pi pi-bars" class="lg:hidden drawer-btn" />
+  <main class="w-full lg:ml-80">
+    <app-top-bar></app-top-bar>
+    <router-outlet></router-outlet>
+  </main>
+</main>

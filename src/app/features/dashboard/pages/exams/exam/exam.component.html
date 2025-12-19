@@ -1,0 +1,13 @@
+<div
+  (click)="naviagetTo()"
+  class="flex justify-between items-center bg-primary-50 p-4 hover:bg-primary-100 hover:scale-x-101 cursor-pointer transition"
+>
+  <div class="flex flex-col gap-2">
+    <span class="text-primary-600 font-semibold text-[1.25rem]">{{ exam().title }}</span>
+    <span class="text-gray-600">{{ exam().numberOfQuestions }} Questions</span>
+  </div>
+  <div class="flex flex-row gap-2">
+    <i class="pi pi-clock text-2xl text-gray-400"></i>
+    <span class="text-gray-800">Duration: {{ exam().duration }} minutes</span>
+  </div>
+</div>
