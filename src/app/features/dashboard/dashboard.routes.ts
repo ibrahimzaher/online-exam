@@ -12,6 +12,7 @@ export const DASHBOARD_ROUTES: Routes = [
     path: 'diploma',
     loadComponent: () =>
       import('./pages/diplomas/diplomas.component').then((c) => c.DiplomasComponent),
+    title: 'Diplomas',
   },
 
   {
@@ -20,6 +21,7 @@ export const DASHBOARD_ROUTES: Routes = [
     data: {
       breadcrumb: 'Exams',
     },
+    title: 'Exams',
   },
 
   {
@@ -32,6 +34,7 @@ export const DASHBOARD_ROUTES: Routes = [
     data: {
       breadcrumb: 'Questions',
     },
+    title: 'Questions',
   },
 
   {

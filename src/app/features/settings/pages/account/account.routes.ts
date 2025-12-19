@@ -12,6 +12,7 @@ export const ACCOUNT_ROUTES: Routes = [
     data: {
       breadcrumb: 'Account',
     },
+    title: 'Profile',
   },
   {
     path: 'change-password',
@@ -20,5 +21,6 @@ export const ACCOUNT_ROUTES: Routes = [
     data: {
       breadcrumb: 'Account',
     },
+    title: 'Change Password',
   },
 ];
