@@ -1,8 +1,8 @@
 <div
   (click)="naviagetTo()"
-  class="flex justify-between items-center bg-primary-50 p-4 hover:bg-primary-100 hover:scale-x-101 cursor-pointer transition"
+  class="flex lg:justify-between flex-col lg:flex-row justify-center items-center bg-primary-50 p-4 hover:bg-primary-100 hover:scale-x-101 cursor-pointer transition"
 >
-  <div class="flex flex-col gap-2">
+  <div class="flex flex-col gap-2 justify-center items-center lg:items-start">
     <span class="text-primary-600 font-semibold text-[1.25rem]">{{ exam().title }}</span>
     <span class="text-gray-600">{{ exam().numberOfQuestions }} Questions</span>
   </div>

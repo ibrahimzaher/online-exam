@@ -20,7 +20,9 @@
   }@else if (questions().length>0 && !loading()) {
 
   <div class="p-5 flex flex-col gap-5 bg-white">
-    <div class="flex justify-between">
+    <div
+      class="flex flex-col justify-center text-xl items-center lg:justify-between lg:items-start lg:flex-row"
+    >
       <span class="font-semibold text-gray-500">{{ currentQuestion().exam.title }}</span>
       <span class="font-semibold text-gray-500">
         Question <span class="text-primary">{{ currentIndex() + 1 }}</span> of
@@ -36,7 +38,7 @@
     </p-progress-bar>
 
     @if(!showAnswer()){
-    <h2 class="text-primary font-semibold text-2xl my-3">
+    <h2 class="text-primary font-semibold lg:text-2xl my-3">
       {{ currentQuestion().question }}
     </h2>
 

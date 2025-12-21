@@ -21,6 +21,7 @@
         }
       </ul>
       <app-button
+        class="hidden lg:block"
         [icon]="'pi pi-sign-out'"
         [iconPos]="'left'"
         [label]="'Logout'"
@@ -32,6 +33,17 @@
 
     <div class="col-span-12 lg:col-span-8">
       <router-outlet></router-outlet>
+      <div class="px-5 mb-5 bg-white">
+        <app-button
+          class="lg:hidden block"
+          [icon]="'pi pi-sign-out'"
+          [iconPos]="'left'"
+          [label]="'Logout'"
+          typeButton="alert"
+          [loading]="loading()"
+          (click)="logout()"
+        ></app-button>
+      </div>
     </div>
   </div>
 </section>

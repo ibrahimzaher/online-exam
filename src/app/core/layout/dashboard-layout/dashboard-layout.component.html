@@ -2,7 +2,7 @@
   <aside class="w-80 h-screen overflow-y-auto fixed top-0 left-0 lg:block hidden">
     <app-sidebar></app-sidebar>
   </aside>
-  <p-drawer #drawerRef [(visible)]="visible" class="lg:hidden sm:block">
+  <p-drawer #drawerRef [(visible)]="visible" class="lg:hidden sm:block h-screen">
     <ng-template #headless> <app-sidebar></app-sidebar> </ng-template>
   </p-drawer>
   <p-button (click)="visible = true" icon="pi pi-bars" class="lg:hidden drawer-btn" />
