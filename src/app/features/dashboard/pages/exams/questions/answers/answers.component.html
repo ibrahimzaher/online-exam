@@ -31,9 +31,9 @@
     <span class="w-full block text-primary text-xl">{{ question.question }}</span>
     <div class="bg-success-100 flex gap-4 my-2 p-4 font-normal">
       <span
-        class="w-7 h-7 block outline-1 outline-gray-300 border-2 border-gray-200 rounded-full bg-success"
+        class="lg:w-7 lg:h-7 h-5 w-5 block outline-1 outline-gray-300 border-2 border-gray-200 rounded-full bg-success"
       ></span>
-      <span class="w-full text-gray-700">
+      <span class="w-full break-all text-gray-700">
         {{ getAnswerText(question, question.correct) }}
       </span>
     </div>
@@ -41,9 +41,9 @@
 
     <div class="bg-danger-100 flex gap-4 my-2 p-4 font-normal">
       <span
-        class="w-7 h-7 block outline-1 outline-gray-300 border-2 border-gray-200 rounded-full bg-danger"
+        class="lg:w-7 lg:h-7 h-5 w-5 block outline-1 outline-gray-300 border-2 border-gray-200 rounded-full bg-danger"
       ></span>
-      <span class="w-full text-gray-700">
+      <span class="w-full break-all text-gray-700">
         {{ getAnswerText(question, answers()[question._id]) }}</span
       >
     </div>

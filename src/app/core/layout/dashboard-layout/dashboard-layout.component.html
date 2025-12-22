@@ -1,13 +1,26 @@
-<main class="min-h-screen flex bg-gray-50">
-  <aside class="w-80 h-screen overflow-y-auto fixed top-0 left-0 lg:block hidden">
+<div class="min-h-screen flex bg-gray-50 overflow-x-hidden">
+  <aside
+    class="fixed top-0 left-0 z-40 w-80 h-screen transition-transform -translate-x-full lg:translate-x-0 border-r border-gray-200 lg:block hidden"
+  >
     <app-sidebar></app-sidebar>
   </aside>
-  <p-drawer #drawerRef [(visible)]="visible" class="lg:hidden sm:block h-screen">
-    <ng-template #headless> <app-sidebar></app-sidebar> </ng-template>
+
+  <p-drawer #drawerRef [(visible)]="visible" class="lg:hidden h-screen">
+    <ng-template #headless>
+      <app-sidebar></app-sidebar>
+    </ng-template>
   </p-drawer>
-  <p-button (click)="visible = true" icon="pi pi-bars" class="lg:hidden drawer-btn" />
-  <main class="w-full lg:ml-80">
-    <app-top-bar></app-top-bar>
-    <router-outlet></router-outlet>
-  </main>
-</main>
+
+  <div class="flex-1 flex flex-col min-w-0 lg:ml-80 transition-all duration-300">
+    <header class="sticky top-0 z-30 flex h-16 w-full items-center justify-between bg-white px-4">
+      <p-button (click)="visible = true" icon="pi pi-bars" class="lg:hidden" />
+      <div class="flex-1">
+        <app-top-bar></app-top-bar>
+      </div>
+    </header>
+
+    <main class="px-4 md:px-6 lg:px-8">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

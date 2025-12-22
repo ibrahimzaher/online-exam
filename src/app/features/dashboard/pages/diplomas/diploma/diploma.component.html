@@ -1,7 +1,19 @@
-<div (click)="navigateTo()" class="relative group w-full transition cursor-pointer">
-  <img class="group-hover:scale-102 transition block w-full h-[300px]" [src]="subject().icon" />
+<div
+  (click)="navigateTo()"
+  class="relative cursor-pointer overflow-hidden rounded-xl shadow-md transition-all duration-300 hover:shadow-xl group"
+>
+  <img
+    class="w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110 sm:h-[200px] md:h-[250px]"
+    [src]="subject().icon"
+    [alt]="subject().name"
+  />
+
+  <div
+    class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+  ></div>
+
   <h2
-    class="bg-primary-500/50 text-center p-5 text-white w-[80%] mx-auto absolute bottom-4 start-[10%]"
+    class="absolute bottom-4 inset-x-4 md:inset-x-8 lg:inset-x-6 bg-white/90 backdrop-blur-sm text-center p-3 rounded-lg shadow-sm font-bold text-gray-800 transition-all duration-300 group-hover:bottom-6 group-hover:shadow-lg"
   >
     {{ subject().name }}
   </h2>
