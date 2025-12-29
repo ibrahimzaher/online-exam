@@ -1,5 +1,5 @@
 <section class="grid lg:grid-cols-2">
-  <aside class="bg-[#EFF6FFBF] relative overflow-hidden hidden lg:block">
+  <aside class="bg-[#EFF6FFBF] relative overflow-hidden hidden lg:block shadow">
     <app-bg-blur-blob></app-bg-blur-blob>
     <header class="flex justify-center flex-col min-h-screen p-10">
       <app-logo></app-logo>
@@ -97,7 +97,7 @@
     </header>
   </aside>
 
-  <main>
+  <main class="bg-linear-to-r from-white via-gray-1000 to-primary-200/50">
     <router-outlet></router-outlet>
   </main>
 </section>

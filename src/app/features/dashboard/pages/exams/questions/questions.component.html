@@ -1,4 +1,4 @@
-<section class="flex flex-col pe-5 sm:ps-5">
+<section class="flex flex-col">
   <app-header
     class="w-full"
     navigateUrl="/exams/{{ examId() }}"
@@ -50,7 +50,7 @@
         (click)="saveAnswer(choice.key)"
       >
         <input type="radio" name="choice" [checked]="currentAnswer() === choice.key" />
-        <span>{{ choice.answer }}</span>
+        <span class="break-all flex-1">{{ choice.answer }}</span>
       </label>
       }
     </div>
