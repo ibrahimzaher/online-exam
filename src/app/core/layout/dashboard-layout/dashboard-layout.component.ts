@@ -6,6 +6,8 @@ import { DrawerModule } from 'primeng/drawer';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { filter } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AuthPageActions } from '../../../features/auth/store/auth.actions';
 @Component({
   selector: 'app-dashboard-layout',
   imports: [
@@ -21,10 +23,14 @@ import { filter } from 'rxjs';
 })
 export class DashboardLayoutComponent {
   visible = false;
-  router = inject(Router);
+  private router = inject(Router);
+  private store = inject(Store);
   constructor() {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.visible = false;
     });
+  }
+  ngOnInit(): void {
+    this.store.dispatch(AuthPageActions.getProfileSubmitted());
   }
 }

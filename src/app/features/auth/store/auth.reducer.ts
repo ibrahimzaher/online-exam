@@ -1,6 +1,6 @@
+import { UserModel } from '@izaher-dev/auth';
 import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
 import { AuthApiActions, AuthPageActions } from './auth.actions';
-import { UserModel } from '@izaher-dev/auth';
 
 export const authFeatureKey = 'auth';
 
@@ -15,7 +15,7 @@ export interface AuthState {
 
 export const initialAuthState: AuthState = {
   user: null,
-  token: null,
+  token: localStorage.getItem('token'),
   forgetPasswordFlow: {
     steps: 1,
     email: null,
@@ -78,17 +78,12 @@ export const authReducer = createReducer(
       user,
     };
   }),
-  on(AuthApiActions.rehydrate, (state, { user, token }) => ({
+
+  on(AuthApiActions.getProfileSuccess, (state, { user }) => ({
     ...state,
     user,
-    token,
   })),
-  on(AuthPageActions.deleteAccountSubmitted, (state) => {
-    return {
-      ...state,
-      initialAuthState,
-    };
-  })
+  on(AuthPageActions.deleteAccountSubmitted, () => initialAuthState)
 );
 
 export const authFeature = createFeature({
@@ -97,10 +92,5 @@ export const authFeature = createFeature({
 });
 export const { name, reducer, selectAuthState, selectForgetPasswordFlow, selectToken, selectUser } =
   authFeature;
-export const selectIsLogin = createSelector(
-  selectUser,
-  selectToken,
-  (user, token) => !!user && !!token
-);
 export const selectForgetFlowSteps = createSelector(selectForgetPasswordFlow, (flow) => flow.steps);
 export const selectForgetFlowEmail = createSelector(selectForgetPasswordFlow, (flow) => flow.email);

@@ -1,46 +1,33 @@
 import {
   ApplicationConfig,
+  isDevMode,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
-  isDevMode,
-  provideAppInitializer,
-  inject,
 } from '@angular/core';
-import Aura from '@primeuix/themes/aura';
 import { provideRouter, withHashLocation, withInMemoryScrolling } from '@angular/router';
+import Aura from '@primeuix/themes/aura';
 import { routes } from './app.routes';
 
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { providePrimeNG } from 'primeng/config';
-import { AUTH_PROVIDERS, API_CONFIG, UserModel } from '@izaher-dev/auth';
-import { environment } from '../environments/environment';
-import { MessageService } from 'primeng/api';
-import { errorInterceptor } from './core/interceptors/error-interceptor';
-import { tokenInterceptor } from './core/interceptors/token-interceptor';
-import { loadingInterceptor } from './core/interceptors/loading-interceptor';
-import { provideStore, Store } from '@ngrx/store';
+import { API_CONFIG, AUTH_PROVIDERS } from '@izaher-dev/auth';
 import { provideEffects } from '@ngrx/effects';
+import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { uiFeatureKey, uiReducer } from './core/store/ui/ui.reducer';
-import { authFeature } from './features/auth/store/auth.reducer';
-import { AuthApiActions } from './features/auth/store/auth.actions';
-import { StorageService } from './core/services/storage.service';
+import { MessageService } from 'primeng/api';
+import { providePrimeNG } from 'primeng/config';
+import { environment } from '../environments/environment';
+import { errorInterceptor } from './core/interceptors/error-interceptor';
+import { loadingInterceptor } from './core/interceptors/loading-interceptor';
+import { tokenInterceptor } from './core/interceptors/token-interceptor';
 import { UiEffects } from './core/store/ui/ui.effects';
+import { uiFeatureKey, uiReducer } from './core/store/ui/ui.reducer';
 import { AuthEffects } from './features/auth/store/auth.effects';
+import { authFeature } from './features/auth/store/auth.reducer';
 import { DASHBOARD_PROVIDER } from './features/dashboard/di/dashboard-di';
-import { dashboardFeature } from './features/dashboard/store/dashboard/dashboard.reducer';
 import { DashboardEffects } from './features/dashboard/store/dashboard/dashboard.effects';
-export function rehydrate() {
-  const store = inject(Store);
-  const storage = inject(StorageService);
-  const user = storage.getItem<UserModel | null>('user');
-  const token = storage.getItem<string | null>('token');
+import { dashboardFeature } from './features/dashboard/store/dashboard/dashboard.reducer';
 
-  if (user && token) {
-    store.dispatch(AuthApiActions.rehydrate({ user, token }));
-  }
-}
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -80,7 +67,6 @@ export const appConfig: ApplicationConfig = {
       [dashboardFeature.name]: dashboardFeature.reducer,
     }),
     provideEffects(UiEffects, AuthEffects, DashboardEffects),
-    provideAppInitializer(rehydrate),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
   ],
 };

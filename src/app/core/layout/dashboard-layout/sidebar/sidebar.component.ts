@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { NavigationStart, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 import { Avatar } from 'primeng/avatar';
@@ -10,7 +10,7 @@ import { selectUser } from '../../../../features/auth/store/auth.reducer';
 import { LogoComponent } from '../../../../shared/ui/logo/logo.component';
 @Component({
   selector: 'app-sidebar',
-  imports: [RouterLink, RouterLinkActive, Avatar, Menu, Button, LogoComponent],
+  imports: [RouterLink, Avatar, Menu, Button, LogoComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
 })
@@ -20,9 +20,21 @@ export class SidebarComponent {
 
   items: MenuItem[] | undefined;
   sidebarLinkedItems = signal([
-    { label: 'Diploma', icon: 'pi pi-graduation-cap', route: 'diploma' },
-    { label: 'Account Settings', icon: 'pi pi-user', route: 'account' },
+    {
+      label: 'Diploma',
+      icon: 'pi pi-graduation-cap',
+      route: 'diploma',
+      activeRoutes: ['diploma', 'exam', 'question'],
+    },
+    { label: 'Account Settings', icon: 'pi pi-user', route: 'account', activeRoutes: ['account'] },
   ]);
+  router = inject(Router);
+  isActiveRoute(route: string[] | string): boolean {
+    if (Array.isArray(route)) {
+      return route.some((r) => this.router.url.includes(r));
+    }
+    return this.router.url.includes(route);
+  }
   logout() {
     this.store.dispatch(AuthPageActions.logoutSubmitted());
   }

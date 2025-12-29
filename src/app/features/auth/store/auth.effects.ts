@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 
+import { Router } from '@angular/router';
 import {
   ChangePasswordUsecaseService,
   DeleteMeUsecaseService,
@@ -8,16 +9,15 @@ import {
   ForgetPasswordUsecaseService,
   LoginUsecaseService,
   LogoutUsecaseService,
+  ProfileDataUsecaseService,
   RegisterUsecaseService,
   ResetPasswordUsecaseService,
   VerifyResetCodeUsecaseService,
 } from '@izaher-dev/auth';
+import { Store } from '@ngrx/store';
+import { catchError, exhaustMap, finalize, map, of, tap } from 'rxjs';
 import { StorageService } from '../../../core/services/storage.service';
 import { ToasterService } from '../../../core/services/toaster.service';
-import { AuthApiActions, AuthPageActions } from './auth.actions';
-import { catchError, exhaustMap, finalize, map, of, tap, throwError } from 'rxjs';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { UiActions } from '../../../core/store/ui/ui.actions';
 import {
   buttonForgetLoading,
@@ -29,8 +29,9 @@ import {
   changePasswordLoading,
   deleteAccountLoading,
   editProfileLoading,
+  loadUserData,
 } from '../../../core/store/ui/ui.constant';
-import { uiFeature } from '../../../core/store/ui/ui.reducer';
+import { AuthApiActions, AuthPageActions } from './auth.actions';
 
 @Injectable()
 export class AuthEffects {
@@ -44,6 +45,7 @@ export class AuthEffects {
   private readonly changePasswordUsecaseService = inject(ChangePasswordUsecaseService);
   private readonly editProfileUsecaseService = inject(EditProfileUsecaseService);
   private readonly deleteAccountUsecaseService = inject(DeleteMeUsecaseService);
+  private readonly getProfileUsecaseService = inject(ProfileDataUsecaseService);
   private readonly storageService = inject(StorageService);
   private readonly toasterService = inject(ToasterService);
   private readonly router = inject(Router);
@@ -67,14 +69,44 @@ export class AuthEffects {
       )
     )
   );
+  getProfile$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthPageActions.getProfileSubmitted),
+      tap(() => this.store.dispatch(UiActions.startLoading({ key: loadUserData }))),
+      exhaustMap(() =>
+        this.getProfileUsecaseService.execute().pipe(
+          map(({ user }) => AuthApiActions.getProfileSuccess({ user: user, message: '' })),
+          catchError((err: any) =>
+            of(
+              AuthApiActions.getProfileFailure({
+                message: err?.message ?? 'An unexpected error occurred',
+              })
+            )
+          ),
+          finalize(() => this.store.dispatch(UiActions.stopLoading({ key: loadUserData })))
+        )
+      )
+    )
+  );
+  getProfileSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthApiActions.getProfileSuccess),
+        tap(({ user, message }) => {
+          this.toasterService.show(`Welcome back, ${user.username}!`);
+        })
+      ),
+    {
+      dispatch: false,
+    }
+  );
   loginSuccess$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(AuthApiActions.loginSuccess),
         tap(({ message, token, user }) => {
           this.storageService.setItem('token', token);
-          this.storageService.setItem('user', user);
-          this.toasterService.show(message);
+
           this.router.navigateByUrl('/diploma');
         })
       ),
@@ -121,8 +153,6 @@ export class AuthEffects {
         ofType(AuthApiActions.registerSuccess),
         tap(({ message, token, user }) => {
           this.storageService.setItem('token', token);
-          this.storageService.setItem('user', user);
-          this.toasterService.show(message);
           this.router.navigateByUrl('/diploma');
         })
       ),
@@ -160,7 +190,7 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthApiActions.forgetPasswordSuccess),
         tap(({ message, email }) => {
-          this.toasterService.show(message);
+          this.toasterService.show('Please check your email for the reset code.');
         })
       ),
     {
@@ -198,7 +228,7 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthApiActions.verifyResetCodeSuccess),
         tap(({ status }) => {
-          this.toasterService.show(status);
+          this.toasterService.show('Reset code verified! You can now reset your password.');
         })
       ),
     {
@@ -214,7 +244,7 @@ export class AuthEffects {
           map(({ message, token }) => AuthApiActions.resetPasswordSuccess({ message, token })),
           catchError((err: any) =>
             of(
-              AuthApiActions.loginFailure({
+              AuthApiActions.resetPasswordFailure({
                 message: err?.message ?? 'An unexpected error occurred',
               })
             )
@@ -229,7 +259,9 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthApiActions.resetPasswordSuccess),
         tap(({ message, token }) => {
-          this.toasterService.show(message);
+          this.toasterService.show(
+            'Password reset successful! Please log in with your new password.'
+          );
           this.router.navigateByUrl('/login', { replaceUrl: true });
         })
       ),
@@ -263,29 +295,15 @@ export class AuthEffects {
         ofType(AuthApiActions.logoutSuccess),
         tap(({ message }) => {
           this.storageService.removeItem('token');
-          this.storageService.removeItem('user');
-          this.toasterService.show(message);
-          this.router.navigateByUrl('/login');
+          this.toasterService.show(message == 'success' ? 'Logged out successfully!' : message);
+          this.router.navigateByUrl('/login', { replaceUrl: true });
         })
       ),
     {
       dispatch: false,
     }
   );
-  rehydrate$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthApiActions.rehydrate),
-        tap(({ user }) => {
-          setTimeout(() => {
-            this.toasterService.show(`Welcome back, ${user.username}!`);
-          }, 0);
-        })
-      ),
-    {
-      dispatch: false,
-    }
-  );
+
   changePassword$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthPageActions.changePasswordSubmitted),
@@ -311,7 +329,7 @@ export class AuthEffects {
         ofType(AuthApiActions.changePasswordSuccess),
         tap(({ message, token }) => {
           this.storageService.setItem('token', token);
-          this.toasterService.show(message);
+          this.toasterService.show('Password changed successfully!');
         })
       ),
     {
@@ -344,8 +362,7 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthApiActions.editProfileSuccess),
         tap(({ message, user }) => {
-          this.storageService.setItem('user', user);
-          this.toasterService.show(message);
+          this.toasterService.show('Profile updated successfully!');
         })
       ),
     {
@@ -377,7 +394,7 @@ export class AuthEffects {
         ofType(AuthApiActions.deleteAccountSuccess),
         tap(({ message }) => {
           this.storageService.clear();
-          this.toasterService.show(message);
+          this.toasterService.show('Account deleted successfully!');
           this.router.navigateByUrl('/login', { replaceUrl: true });
         })
       ),

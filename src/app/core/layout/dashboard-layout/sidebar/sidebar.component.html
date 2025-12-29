@@ -6,7 +6,7 @@
   <div class="overflow-y-auto">
     <ul class="list-none flex flex-col px-10 mt-5 overflow-hidden">
       @for (item of sidebarLinkedItems(); track $index) {
-      <li [routerLink]="[item.route]" [routerLinkActive]="['active']">
+      <li [routerLink]="[item.route]" [class.active]="isActiveRoute(item.activeRoutes)">
         <a
           pRipple
           class="flex items-center text-gray-500 cursor-pointer p-4 text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 duration-150 transition-colors p-ripple"

@@ -12,3 +12,4 @@ export const deleteAccountLoading = 'deleteAccount button';
 export const loadDiplomasLoading = 'loadDiplomas button';
 export const loadExamsLoading = 'loadExams button';
 export const loadQuestionsLoading = 'loadQuestions button';
+export const loadUserData = 'loadUserData';

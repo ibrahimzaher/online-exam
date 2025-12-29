@@ -16,10 +16,7 @@ import {
   VerifyResetCodeReq,
 } from '@izaher-dev/auth';
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-export interface rehydrateModel {
-  user: UserModel;
-  token: string;
-}
+
 export const AuthPageActions = createActionGroup({
   source: 'Auth Page',
   events: {
@@ -33,6 +30,7 @@ export const AuthPageActions = createActionGroup({
     editProfileSubmitted: props<EditProfileReq>(),
     changePasswordSubmitted: props<ChangePasswordReq>(),
     deleteAccountSubmitted: emptyProps(),
+    getProfileSubmitted: emptyProps(),
   },
 });
 export const AuthApiActions = createActionGroup({
@@ -56,6 +54,7 @@ export const AuthApiActions = createActionGroup({
     changePasswordFailure: props<MessageModel>(),
     deleteAccountSuccess: props<MessageModel>(),
     deleteAccountFailure: props<MessageModel>(),
-    rehydrate: props<rehydrateModel>(),
+    getProfileSuccess: props<ProfileModel>(),
+    getProfileFailure: props<MessageModel>(),
   },
 });
