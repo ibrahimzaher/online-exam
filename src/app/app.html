@@ -1,8 +1,8 @@
 <p-toast
-  [showTransitionOptions]="'200ms'"
-  [showTransformOptions]="'translateX(100%)'"
-  [hideTransitionOptions]="'200ms'"
-  [hideTransformOptions]="'translateX(100%)'"
+  [showTransitionOptions]="'300ms ease-out'"
+  [hideTransitionOptions]="'250ms ease-in'"
+  [position]="'top-right'"
+  [breakpoints]="{ '920px': { width: '90%', left: '5%', right: '5%' } }"
 />
 <app-progress></app-progress>
 <router-outlet></router-outlet>

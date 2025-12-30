@@ -11,10 +11,9 @@ export class ToasterService {
       severity: isSuccess ? 'success' : 'error',
       summary: message,
       detail: detail,
-      life: 2000,
+      life: 1500,
       closable: false,
       id: crypto.randomUUID(),
-      styleClass: isSuccess ? 'custom-toast success' : 'custom-toast error',
     });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { EditProfileReq } from '@izaher-dev/auth';
 import { Store } from '@ngrx/store';
@@ -28,11 +28,25 @@ export class ProfileComponent implements OnInit {
   profileForm!: FormGroup<Record<keyof EditProfileReq, FormControl<string>>>;
   init() {
     this.profileForm = this.accountFormsService.initProfilerForm({
-      email: this.user()?.email,
-      firstName: this.user()?.firstName,
-      lastName: this.user()?.lastName,
-      phone: this.user()?.phone,
-      username: this.user()?.username,
+      email: '',
+      firstName: '',
+      lastName: '',
+      phone: '',
+      username: '',
+    });
+  }
+  constructor() {
+    effect(() => {
+      const user = this.user();
+      if (user && this.profileForm) {
+        this.profileForm?.patchValue({
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phone: user.phone,
+          username: user.username,
+        });
+      }
     });
   }
   ngOnInit() {
@@ -43,7 +57,6 @@ export class ProfileComponent implements OnInit {
   }
   editProfile() {
     console.log(this.profileForm.value);
-
     if (this.profileForm.invalid) {
       this.profileForm.markAllAsTouched();
       return;

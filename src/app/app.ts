@@ -13,6 +13,7 @@ import { Toast } from 'primeng/toast';
 import { UiActions } from './core/store/ui/ui.actions';
 import { routerLoading } from './core/store/ui/ui.constant';
 import { ProgressComponent } from './shared/ui/progress/progress.component';
+import { ToasterService } from './core/services/toaster.service';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, Toast, ProgressComponent, ProgressBarModule],
@@ -23,6 +24,7 @@ export class App implements OnInit {
   protected readonly title = signal('online-exam');
   private store = inject(Store);
   private _router = inject(Router);
+  tost = inject(ToasterService);
   ngOnInit(): void {
     this._router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
@@ -35,5 +37,14 @@ export class App implements OnInit {
         setTimeout(() => this.store.dispatch(UiActions.stopLoading({ key: routerLoading })));
       }
     });
+  }
+  toasts() {
+    this.tost.show(
+      `Welcome to Online Exam System dasdasdasda to Online Exam System dasdasdasda
+      dasdasdasd
+      dasdasdasdasd
+      dasdasdas`,
+      true
+    );
   }
 }

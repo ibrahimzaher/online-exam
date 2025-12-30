@@ -1,5 +1,6 @@
 <form
   [formGroup]="profileForm"
+  (ngSubmit)="editProfile()"
   class="flex justify-center bg-white items-start flex-col p-5 w-full"
 >
   <div class="flex flex-col gap-4 w-full">
@@ -45,10 +46,11 @@
         (click)="confirm($event)"
         [label]="'Delete My Account'"
         typeButton="alert"
+        type="button"
       ></app-button>
       <app-button
-        (click)="editProfile()"
         class="w-full"
+        typeButton="primary"
         [loading]="loadingEdit()"
         [label]="'Save Changes'"
       ></app-button>

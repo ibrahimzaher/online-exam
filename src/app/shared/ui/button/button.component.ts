@@ -13,6 +13,7 @@ export class ButtonComponent {
   icon = input<string>();
   loading = input<boolean>(false);
   typeButton = input<ButtonType>('primary');
+  type = input<'button' | 'submit' | 'reset'>('submit');
   disabled = input<boolean>(false);
   get classes() {
     return {

@@ -3,7 +3,7 @@
     <img src="assets/images/elevate.png" width="80%" class="invert" />
     <app-logo></app-logo>
   </div>
-  <div class="overflow-y-auto">
+  <div class="overflow-y-auto flex-1">
     <ul class="list-none flex flex-col px-10 mt-5 overflow-hidden">
       @for (item of sidebarLinkedItems(); track $index) {
       <li [routerLink]="[item.route]" [class.active]="isActiveRoute(item.activeRoutes)">

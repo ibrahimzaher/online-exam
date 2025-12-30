@@ -83,7 +83,7 @@ export const authReducer = createReducer(
     ...state,
     user,
   })),
-  on(AuthPageActions.deleteAccountSubmitted, () => initialAuthState)
+  on(AuthPageActions.deleteAccountSubmitted, () => ({ ...initialAuthState }))
 );
 
 export const authFeature = createFeature({
